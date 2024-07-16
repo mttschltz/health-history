@@ -21,6 +21,10 @@ docker run -p 8090:8090 -v ./pb/pb_data:/app/pb/pb_data -dt hh
 ```
 
 - `fly deploy` to deploy to prod
+- local development
+  - `docker compose up -d`
+  - Note: `docker-compose.override.yml` sets up Svelte with live reload (and extends `docker-compose.yml`).
+  - Use <http://localhost:5173> for web (sk) and <http://localhost:8090> for Pocketbase (pb)
 
 ## Setup
 
