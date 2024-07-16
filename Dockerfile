@@ -3,17 +3,24 @@ WORKDIR /build
 COPY pb/go.mod pb/go.sum pb/main.go ./
 COPY pb/hooks ./hooks
 COPY pb/auditlog ./auditlog
-RUN apk --no-cache add upx make git gcc libtool musl-dev ca-certificates dumb-init \
+RUN apk --no-cache add upx make git gcc libtool musl-dev ca-certificates dumb-init nodejs yarn \
+  && node --version \
+  && yarn --version \
   && go mod tidy \
   && CGO_ENABLED=0 go build \
   && upx pocketbase
+# Use .dockerignore to exclude files/folders from being copied
+COPY sk/ ./sk/
+WORKDIR /build/sk
+RUN yarn install
+RUN yarn build
 
 FROM alpine
 WORKDIR /app/pb
 COPY --from=builder /build/pocketbase /app/pb/pocketbase
 # COPY pb/pb_data ./pb_data #not needed
 COPY pb/pb_hooks ./pb_hooks
-COPY sk/build ./pb_public
+COPY --from=builder /build/sk/build ./pb_public
 COPY pb/pb_migrations ./pb_migrations
 COPY pb/data ./data
 # these are the volumes you could mount to your own dirs

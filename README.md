@@ -20,6 +20,8 @@ docker build . -t hh
 docker run -p 8090:8090 -v ./pb/pb_data:/app/pb/pb_data -dt hh
 ```
 
+- `fly deploy` to deploy to prod
+
 ## Setup
 
 Follow these steps CAREFULLY, or else it won't work. Also read the README files referred above before proceeding.
