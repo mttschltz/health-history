@@ -7,7 +7,8 @@ import type { RecordService } from 'pocketbase'
 
 export enum Collections {
 	Auditlog = "auditlog",
-	Hooks = "hooks",
+	Person = "person",
+	PersonCondition = "person_condition",
 	Posts = "posts",
 	Users = "users",
 }
@@ -46,25 +47,54 @@ export type AuditlogRecord<Tdata = unknown, Toriginal = unknown> = {
 	user?: RecordIdString
 }
 
-export enum HooksEventOptions {
-	"insert" = "insert",
-	"update" = "update",
-	"delete" = "delete",
+export enum PersonSexOptions {
+	"Male" = "Male",
+	"Female" = "Female",
 }
 
-export enum HooksActionTypeOptions {
-	"command" = "command",
-	"email" = "email",
-	"post" = "post",
+export enum PersonLifestyleIssuesOptions {
+	"smoking" = "smoking",
+	"alcohol" = "alcohol",
+	"job" = "job",
+	"overweight" = "overweight",
+	"underweight" = "underweight",
+	"other" = "other",
 }
-export type HooksRecord = {
-	action: string
-	action_params?: string
-	action_type: HooksActionTypeOptions
-	collection: string
-	disabled?: boolean
-	event: HooksEventOptions
-	expands?: string
+export type PersonRecord = {
+	Sex?: PersonSexOptions
+	birthFather?: RecordIdString
+	birthMother?: RecordIdString
+	birthYear?: number
+	deathAge?: number
+	deathYear?: number
+	ethnicity?: string
+	fullName: string
+	lifestyleIssueDetails?: HTMLString
+	lifestyleIssues?: PersonLifestyleIssuesOptions[]
+}
+
+export enum PersonConditionConditionOptions {
+	"asthma" = "asthma",
+	"birth-defect" = "birth-defect",
+	"diabetes-type-1" = "diabetes-type-1",
+	"diabetes-type-2" = "diabetes-type-2",
+	"genetic-disorder" = "genetic-disorder",
+	"heart-disease" = "heart-disease",
+	"heart-attack" = "heart-attack",
+	"high-blood-pressure" = "high-blood-pressure",
+	"high-cholesterol" = "high-cholesterol",
+	"mental-illness" = "mental-illness",
+	"osteoporosis" = "osteoporosis",
+	"cancer" = "cancer",
+	"stillbirth-miscarriage" = "stillbirth-miscarriage",
+	"stroke" = "stroke",
+	"other" = "other",
+}
+export type PersonConditionRecord = {
+	condition: PersonConditionConditionOptions
+	details?: HTMLString
+	person: RecordIdString
+	type?: string
 }
 
 export type PostsRecord = {
@@ -82,7 +112,8 @@ export type UsersRecord = {
 
 // Response types include system fields and match responses from the PocketBase API
 export type AuditlogResponse<Tdata = unknown, Toriginal = unknown, Texpand = unknown> = Required<AuditlogRecord<Tdata, Toriginal>> & BaseSystemFields<Texpand>
-export type HooksResponse<Texpand = unknown> = Required<HooksRecord> & BaseSystemFields<Texpand>
+export type PersonResponse<Texpand = unknown> = Required<PersonRecord> & BaseSystemFields<Texpand>
+export type PersonConditionResponse<Texpand = unknown> = Required<PersonConditionRecord> & BaseSystemFields<Texpand>
 export type PostsResponse<Texpand = unknown> = Required<PostsRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
@@ -90,14 +121,16 @@ export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSyste
 
 export type CollectionRecords = {
 	auditlog: AuditlogRecord
-	hooks: HooksRecord
+	person: PersonRecord
+	person_condition: PersonConditionRecord
 	posts: PostsRecord
 	users: UsersRecord
 }
 
 export type CollectionResponses = {
 	auditlog: AuditlogResponse
-	hooks: HooksResponse
+	person: PersonResponse
+	person_condition: PersonConditionResponse
 	posts: PostsResponse
 	users: UsersResponse
 }
@@ -107,7 +140,8 @@ export type CollectionResponses = {
 
 export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'auditlog'): RecordService<AuditlogResponse>
-	collection(idOrName: 'hooks'): RecordService<HooksResponse>
+	collection(idOrName: 'person'): RecordService<PersonResponse>
+	collection(idOrName: 'person_condition'): RecordService<PersonConditionResponse>
 	collection(idOrName: 'posts'): RecordService<PostsResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }

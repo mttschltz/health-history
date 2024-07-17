@@ -1,34 +1,23 @@
 <script lang="ts">
   import { base } from "$app/paths";
+  import { derived } from "svelte/store";
 
   const { data } = $props();
+  const people = derived(data.people, ($people) => {
+    return $people.items.sort((a, b) => a.fullName.localeCompare(b.fullName));
+  });
   $effect(() => {
     // you could set the metadata either here or in +page.ts
-    data.metadata.title = "Home";
-    data.metadata.headline = `Welcome to ${data.config.site?.name}`;
+    data.metadata.title = "Health History";
+    data.metadata.headline = `Health History`;
   });
 </script>
 
-<p>
-  Visit
-  <a
-    href="https://github.com/spinspire/pocketbase-sveltekit-starter"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    https://github.com/spinspire/pocketbase-sveltekit-starter
-  </a>
-  on <i class="bx bxl-github bx-sm"></i>GitHub to read the documentation.
-</p>
-
-<h2>Features</h2>
+<h2>Everyone</h2>
 <ul>
-  <li>Svelte 5: runes, $props, snippets, etc.</li>
-  <li>
-    SvelteKit: routing, PageData loading, CSR with <code>adapter-static</code>
-  </li>
-  <li>PocketBase: CRUD, typegen, realtime data updates</li>
-  <li>PocketBase: JSVM hook, routes, etc.</li>
+  {#each $people as person}
+    <li>
+      <a href={`${base}/person/${person.id}`}>{person.fullName}</a>
+    </li>
+  {/each}
 </ul>
-
-<p>Now <a href="{base}/posts">browse/edit/create some posts</a>.</p>
