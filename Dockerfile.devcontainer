@@ -10,11 +10,18 @@ RUN apk --no-cache add upx make git gcc libtool musl-dev ca-certificates dumb-in
 
 FROM golang:1.22-alpine AS dev
 
-RUN apk add --update nodejs npm git
+RUN apk add --update nodejs npm git curl
 RUN node --version
 RUN npm --version
 
 RUN go install github.com/cortesi/modd/cmd/modd@latest
+# Install dlv to avoid having to do it via a VS Code notification each time the
+# container is built.
+RUN go install -v github.com/go-delve/delve/cmd/dlv@latest
+
+RUN curl -L https://fly.io/install.sh | sh
+ENV FLYCTL_INSTALL="/root/.fly"
+ENV PATH="$FLYCTL_INSTALL/bin:$PATH"
 
 WORKDIR /app/pb
 # COPY --from=builder /build/pocketbase /app/pb/pocketbase
