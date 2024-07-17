@@ -5,3 +5,4 @@
 .ash_history
 pbsk.code-workspace
 .DS_Store
+pb/__debug_bin*

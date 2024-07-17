@@ -32,7 +32,7 @@
 </header>
 <main class="container">
   <Alerts></Alerts>
-  <h1>{metadata.headline ?? metadata.title}</h1>
+  <h1 class="h1">{metadata.headline ?? metadata.title}</h1>
   {@render children()}
 </main>
 <footer class="container">
