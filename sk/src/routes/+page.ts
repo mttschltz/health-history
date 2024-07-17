@@ -8,6 +8,8 @@ export const load: PageLoad = async ({ parent, fetch }) => {
   };
   const people = await watch<PersonResponse<any>>("person", queryParams);
   const { metadata } = await parent();
+  metadata.title = "Health History";
+  metadata.headline = "Health History";
   return {
     metadata,
     people,
