@@ -1,11 +1,14 @@
-<script lang="ts">
+<script>
+  import "../app.css";
   import "../app.scss";
   import { base } from "$app/paths";
   import { page } from "$app/stores";
   import Alerts from "$lib/components/Alerts.svelte";
   import LoginBadge from "$lib/components/LoginBadge.svelte";
   import Nav from "$lib/components/Nav.svelte";
+
   const { data, children } = $props();
+
   const metadata = $derived(data.metadata ?? {});
   const config = $derived(data.config ?? {});
 
@@ -24,20 +27,20 @@
   <a href={`${base}/`} class="logo">
     <img src={`${base}/favicon.svg`} alt="application logo" />
   </a>
-  <Nav />
-  <LoginBadge signupAllowed={config.signupAllowed} />
+  <Nav></Nav>
+  <LoginBadge signupallowed={config.signupAllowed}></LoginBadge>
 </header>
 <main class="container">
-  <Alerts />
+  <Alerts></Alerts>
   <h1>{metadata.headline ?? metadata.title}</h1>
   {@render children()}
 </main>
 <footer class="container">
-  Copyright &copy; {config.site?.year}
+  Copyright © {config.site?.year}
   {config.site?.copyright}
 </footer>
 
-<style lang="scss">
+<style>
   header {
     display: flex;
     justify-content: space-between;
