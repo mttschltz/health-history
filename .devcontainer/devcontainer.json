@@ -12,7 +12,8 @@
 		"vscode": {
 			"extensions": [
 				"golang.go",
-				"esbenp.prettier-vscode"
+				"esbenp.prettier-vscode",
+				"svelte.svelte-vscode"
 			]
 		}
 	}

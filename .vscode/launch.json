@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Frontend Live Dev",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/sk",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run-script", "dev"],
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
       "name": "PocketBase Debug",
       "type": "go",
       "request": "launch",
