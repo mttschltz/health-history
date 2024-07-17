@@ -2,6 +2,7 @@
 
 ## My notes
 
+- `npm` doesn't work for some reason. `yarn` does.
 - Using docker-compose
   - Could not access from host until I added
 
