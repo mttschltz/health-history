@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -26,6 +27,7 @@ func defaultPublicDir() string {
 }
 
 func main() {
+	fmt.Println("App starting")
 	app := pocketbase.New()
 
 	var hooksDir string
