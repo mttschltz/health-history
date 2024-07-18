@@ -6,7 +6,6 @@
   import FileField from "$lib/pocketbase/FileField.svelte";
   import type { PostsResponse } from "$lib/pocketbase/generated-types.js";
   import z from "zod";
-  // import { ProgressRadial } from "@skeletonlabs/skeleton";
 
   const { data } = $props();
   let person = $state(data.person);
@@ -79,9 +78,9 @@
   </div> -->
   <button class="btn variant-filled-primary" type="submit">
     {#if $store}
-      <!-- <ProgressRadial /> -->
-      (spin)
+      Loading...
+    {:else}
+      Save
     {/if}
-    Save
   </button>
 </form>

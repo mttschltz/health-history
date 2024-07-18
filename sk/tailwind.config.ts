@@ -15,7 +15,7 @@ export default {
     "./src/**/*.{html,js,svelte,ts}",
     // 3. Append the path to the Skeleton package
     join(
-      require.resolve("@skeletonlabs/skeleton"),
+      require.resolve("@skeletonlabs/skeleton-svelte"),
       "../**/*.{html,js,svelte,ts}"
     ),
   ],

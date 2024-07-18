@@ -306,6 +306,11 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.18.1.tgz#0cb240c147c0dfd0e3eaff4cc060a772d39e155c"
   integrity sha512-yjk2MAkQmoaPYCSu35RLJ62+dz358nE83VfTePJRp8CG7aMg25mEJYpXFiD+NcevhX8LxD5OP5tktPXnXN7GDw==
 
+"@skeletonlabs/skeleton-svelte@^1.0.0-next.4":
+  version "1.0.0-next.4"
+  resolved "https://registry.yarnpkg.com/@skeletonlabs/skeleton-svelte/-/skeleton-svelte-1.0.0-next.4.tgz#bf5e3a259eab7506c06e674937627517e5e9f817"
+  integrity sha512-3LjCDUf9c7sAV+XsE05H6YBGeYDeSdHUnw01PFVCqel9BKXpRPmU7aKvz27zVQ+ZH3sBAZfcAEs10LD7AxZ01g==
+
 "@skeletonlabs/skeleton@^3.0.0-next.2":
   version "3.0.0-next.2"
   resolved "https://registry.yarnpkg.com/@skeletonlabs/skeleton/-/skeleton-3.0.0-next.2.tgz#5e9ab59a5f641c7ce9e05475eda651fe97106317"
