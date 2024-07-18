@@ -15,6 +15,8 @@
   const metadata = $derived(data.metadata ?? {});
   const config = $derived(data.config ?? {});
 
+  const title = $derived($page.data.title);
+
   $effect(() => {
     if ($page.error) {
       metadata.title = $page.error.message;
@@ -35,7 +37,7 @@
 </header>
 <main class="container">
   <Alerts></Alerts>
-  <h1 class="h1">{metadata.headline ?? metadata.title}</h1>
+  <h1 class="h1">{title ?? metadata.headline ?? metadata.title}</h1>
   {@render children()}
 </main>
 <footer class="container">

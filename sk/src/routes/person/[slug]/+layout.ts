@@ -16,16 +16,34 @@ export const load: LayoutLoad = async ({ params, fetch, parent }) => {
   const { slug } = params;
   const filter = client.filter("id = {:slug}", { slug });
   const coll = client.collection("person");
-  const options = { fetch, expand: "birthMother,birthFather" };
-  const record = await coll.getFirstListItem<PersonResponse<PersonExpand>>(
+  const options = {
+    fetch,
+    expand: "birthMother,birthFather",
+  };
+  const person = await coll.getFirstListItem<PersonResponse<PersonExpand>>(
     filter,
     options
   );
+  const siblings = await coll.getFullList<PersonResponse>({
+    filter: client.filter(
+      "id != {:id} && (birthMother={:birthMother} || birthFather={:birthFather})",
+      {
+        id: person.id,
+        birthMother: person.birthMother,
+        birthFather: person.birthFather,
+      }
+    ),
+  });
+  siblings.sort((a, b) => a.birthYear - b.birthYear);
 
   const { metadata } = await parent();
-  metadata.title = metadata.headline = `${record.fullName}'s family`;
+  metadata.title = metadata.headline = `${person.fullName}'s family`;
+
+  console.log(`xyz person page title: ${person.fullName}`);
 
   return {
-    record,
+    title: person.fullName,
+    person,
+    siblings,
   };
 };

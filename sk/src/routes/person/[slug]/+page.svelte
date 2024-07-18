@@ -2,20 +2,23 @@
   import ImgModal from "$lib/pocketbase/ImgModal.svelte";
   import { client } from "$lib/pocketbase/index.js";
   import { base } from "$app/paths";
+  import { PersonSexOptions } from "$lib/pocketbase/generated-types";
 
   const { data } = $props();
-  const record = $derived(data.record);
-  const birthMother = $derived(record.expand?.birthMother);
-  const birthFather = $derived(record.expand?.birthFather);
+  const person = $derived(data.person);
+  const birthMother = $derived(person.expand?.birthMother);
+  const birthFather = $derived(person.expand?.birthFather);
+  const siblings = $derived(data.siblings);
   $effect(() => {
     data.metadata.title =
-      data.metadata.headline = `${record.fullName}'s family`;
+      data.metadata.headline = `${person.fullName}'s family`;
   });
 </script>
 
 <article>
+  <h2 class="h2">Parents</h2>
   <div class="flex flex-row items-center gap-3">
-    <div>Mother</div>
+    <div class="basis-24">Mother</div>
     {#if birthMother}
       <div>
         <a href={`${base}/person/${birthMother.id}`} class="btn variant-filled"
@@ -27,7 +30,7 @@
     {/if}
   </div>
   <div class="flex flex-row items-center gap-3">
-    <div>Father</div>
+    <div class="basis-24">Father</div>
     {#if birthFather}
       <div>
         <a href={`${base}/person/${birthFather.id}`} class="btn variant-filled"
@@ -44,5 +47,24 @@
     <!-- <img {src} alt={title} {title} /> -->
     <!-- <ImgModal {record} filename={file} /> -->
     <!-- {/each} -->
+  </div>
+  <div>
+    <h2 class="h2">Siblings</h2>
+    {#each siblings as sibling}
+      <div class="flex flex-row items-center gap-3">
+        {#if sibling.Sex === PersonSexOptions.Male}
+          <div class="basis-24">Brother</div>
+        {:else if sibling.Sex === PersonSexOptions.Female}
+          <div class="basis-24">Sister</div>
+        {:else}
+          <div class="basis-24">Sibling</div>
+        {/if}
+        <div>
+          <a href={`${base}/person/${sibling.id}`} class="btn variant-filled"
+            >{sibling.fullName}</a
+          >
+        </div>
+      </div>
+    {/each}
   </div>
 </article>
