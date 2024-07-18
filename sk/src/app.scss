@@ -11,20 +11,39 @@ html {
     max-width: unset;
     // no horizonal scrollbars
     overflow-x: hidden;
-    // override default fonts
-    font-family:
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      Fira Sans,
-      Droid Sans,
-      Helvetica Neue,
-      Segoe UI Emoji,
-      Apple Color Emoji,
-      Noto Color Emoji,
-      sans-serif;
+  // Moved this below, because the 'html body' selector was overriding
+  // the 'body' one which applies to default text.
+  //
+  //   // override default fonts
+  //   font-family:
+  //     Roboto,
+  //     Oxygen,
+  //     Ubuntu,
+  //     Cantarell,
+  //     Fira Sans,
+  //     Droid Sans,
+  //     Helvetica Neue,
+  //     Segoe UI Emoji,
+  //     Apple Color Emoji,
+  //     Noto Color Emoji,
+  //     sans-serif;
   }
+}
+
+body {
+  // override default fonts
+  font-family:
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica Neue,
+    Segoe UI Emoji,
+    Apple Color Emoji,
+    Noto Color Emoji,
+    sans-serif;
 }
 
 .container {

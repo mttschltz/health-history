@@ -26,6 +26,21 @@ export default {
   plugins: [
     require("@tailwindcss/typography"),
     // 4. Append the Skeleton plugin (after other plugins)
-    skeleton,
+    skeleton({
+      themes: {
+        preset: [
+          "skeleton",
+          { name: "modern", enhancements: true },
+          "crimson",
+          "gold-nouveau",
+          "hamlindigo",
+          "rocket",
+          "sahara",
+          "seafoam",
+          "vintage",
+          "wintry",
+        ],
+      },
+    }),
   ],
 } as Config;

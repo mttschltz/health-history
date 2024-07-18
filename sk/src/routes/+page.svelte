@@ -8,11 +8,13 @@
   });
 </script>
 
-<h2>Everyone</h2>
+<h2 class="h2">Everyone</h2>
 <ul>
   {#each $people as person}
     <li>
-      <a href={`${base}/person/${person.id}`}>{person.fullName}</a>
+      <a class="anchor" href={`${base}/person/${person.id}`}
+        >{person.fullName}</a
+      >
     </li>
   {/each}
 </ul>
