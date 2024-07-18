@@ -26,7 +26,7 @@ export const load: LayoutLoad = async ({ params, fetch, parent }) => {
   );
   const siblings = await coll.getFullList<PersonResponse>({
     filter: client.filter(
-      "id != {:id} && (birthMother={:birthMother} || birthFather={:birthFather})",
+      "id != {:id} && ((birthMother != '' && birthMother={:birthMother}) || (birthFather != '' && birthFather={:birthFather}))",
       {
         id: person.id,
         birthMother: person.birthMother,
