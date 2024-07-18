@@ -16,10 +16,7 @@
 </script>
 
 <article>
-  <a
-    href={`${base}/person/${person.id}/edit`}
-    class="btn variant-filled-primary"
-  >
+  <a href={`${base}/person/${person.id}/edit`} class="btn preset-filled">
     Update health history
   </a>
 
@@ -28,9 +25,8 @@
     <div class="basis-24">Mother</div>
     {#if birthMother}
       <div>
-        <a
-          href={`${base}/person/${birthMother.id}`}
-          class="btn variant-soft-primary">{birthMother.fullName}</a
+        <a href={`${base}/person/${birthMother.id}`} class="btn preset-tonal"
+          >{birthMother.fullName}</a
         >
       </div>
     {:else}
@@ -41,9 +37,8 @@
     <div class="basis-24">Father</div>
     {#if birthFather}
       <div>
-        <a
-          href={`${base}/person/${birthFather.id}`}
-          class="btn variant-soft-primary">{birthFather.fullName}</a
+        <a href={`${base}/person/${birthFather.id}`} class="btn preset-tonal"
+          >{birthFather.fullName}</a
         >
       </div>
     {:else}
@@ -69,9 +64,8 @@
           <div class="basis-24">Sibling</div>
         {/if}
         <div>
-          <a
-            href={`${base}/person/${sibling.id}`}
-            class="btn variant-soft-primary">{sibling.fullName}</a
+          <a href={`${base}/person/${sibling.id}`} class="btn preset-tonal"
+            >{sibling.fullName}</a
           >
         </div>
       </div>

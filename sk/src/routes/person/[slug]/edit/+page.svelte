@@ -6,6 +6,7 @@
   import FileField from "$lib/pocketbase/FileField.svelte";
   import type { PostsResponse } from "$lib/pocketbase/generated-types.js";
   import z from "zod";
+  import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
 
   const { data } = $props();
   let person = $state(data.person);
@@ -76,9 +77,9 @@
       placeholder="Details of lifestyle issues"
     ></textarea>
   </div> -->
-  <button class="btn variant-filled-primary" type="submit">
-    {#if $store}
-      Loading...
+  <button class="btn preset-filled" type="submit">
+    {#if !$store}
+      <ProgressRing size="size-7" />
     {:else}
       Save
     {/if}
