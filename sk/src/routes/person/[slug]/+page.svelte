@@ -16,13 +16,21 @@
 </script>
 
 <article>
+  <a
+    href={`${base}/person/${person.id}/edit`}
+    class="btn variant-filled-primary"
+  >
+    Update health history
+  </a>
+
   <h2 class="h2">Parents</h2>
   <div class="flex flex-row items-center gap-3">
     <div class="basis-24">Mother</div>
     {#if birthMother}
       <div>
-        <a href={`${base}/person/${birthMother.id}`} class="btn variant-filled"
-          >{birthMother.fullName}</a
+        <a
+          href={`${base}/person/${birthMother.id}`}
+          class="btn variant-soft-primary">{birthMother.fullName}</a
         >
       </div>
     {:else}
@@ -33,8 +41,9 @@
     <div class="basis-24">Father</div>
     {#if birthFather}
       <div>
-        <a href={`${base}/person/${birthFather.id}`} class="btn variant-filled"
-          >{birthFather.fullName}</a
+        <a
+          href={`${base}/person/${birthFather.id}`}
+          class="btn variant-soft-primary">{birthFather.fullName}</a
         >
       </div>
     {:else}
@@ -60,8 +69,9 @@
           <div class="basis-24">Sibling</div>
         {/if}
         <div>
-          <a href={`${base}/person/${sibling.id}`} class="btn variant-filled"
-            >{sibling.fullName}</a
+          <a
+            href={`${base}/person/${sibling.id}`}
+            class="btn variant-soft-primary">{sibling.fullName}</a
           >
         </div>
       </div>
