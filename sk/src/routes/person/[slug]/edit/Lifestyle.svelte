@@ -10,18 +10,24 @@
   let originalDetails = $state(lifestyle.details);
   let updatedDetails = $state(lifestyle.details);
   let hasChanged = $derived.by(() => originalDetails !== updatedDetails);
+  let error = $state("");
 
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
+    error = "";
     // TODO: Remove
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    lifestyle = await save<PersonLifestyleResponse>("person_lifestyle", {
-      ...lifestyle,
-      details: updatedDetails,
-    });
-    originalDetails = lifestyle.details;
-    updatedDetails = lifestyle.details;
-    alerts.info("Lifestyle saved.", 5000);
+    try {
+      lifestyle = await save<PersonLifestyleResponse>("person_lifestyle", {
+        ...lifestyle,
+        details: updatedDetails,
+      });
+      originalDetails = lifestyle.details;
+      updatedDetails = lifestyle.details;
+      alerts.info("Lifestyle saved.", 5000);
+    } catch {
+      error = "Error saving lifestyle. Please try again.";
+    }
   }
 
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
@@ -32,6 +38,11 @@
   onsubmit={store.run}
 >
   <div class="flex flex-col items-start gap-3">
+    {#if error}
+      <div>
+        <span class="card preset-filled-error-100-900 p-2">{error}</span>
+      </div>
+    {/if}
     <span class="badge preset-filled-primary-500">{lifestyle.lifestyle}</span>
     <label class="label">
       <textarea
