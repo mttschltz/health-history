@@ -28,6 +28,7 @@
   const hasChanged = $derived.by(
     () => unsavedLifestyle.details !== "" || unsavedLifestyle.lifestyle !== ""
   );
+  let error = $state("");
 
   let lifestyleOptions: PersonLifestyleLifestyleOptions[] = Object.values(
     PersonLifestyleLifestyleOptions
@@ -40,16 +41,21 @@
 
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
+    error = "";
     // TODO: Remove
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    const createdLifestyle = await save<PersonLifestyleResponse>(
-      "person_lifestyle",
-      {
-        ...unsavedLifestyle,
-      }
-    );
-    addLifestyle(createdLifestyle);
-    alerts.info("Lifestyle created.", 5000);
+    try {
+      const createdLifestyle = await save<PersonLifestyleResponse>(
+        "person_lifestyle",
+        {
+          ...unsavedLifestyle,
+        }
+      );
+      addLifestyle(createdLifestyle);
+      alerts.info("Lifestyle created.", 5000);
+    } catch {
+      error = "Error saving lifestyle. Did you select a lifestyle type?";
+    }
   }
 
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
@@ -61,12 +67,16 @@
 >
   <h3 class="h3">New Lifestyle</h3>
   <div class="mt-2 flex flex-col items-start gap-3">
+    {#if error}
+      <div>
+        <span class="card preset-filled-error-100-900 p-2">{error}</span>
+      </div>
+    {/if}
     <select
       class="select rounded-container"
       bind:value={unsavedLifestyle.lifestyle}
-      placeholder="Select lifestyle"
     >
-      <option value="" disabled selected>Select lifestyle</option>
+      <option value="" disabled selected>Select lifestyle type</option>
       {#each lifestyleOptions as option}
         <option value={option}>{option}</option>
       {/each}
