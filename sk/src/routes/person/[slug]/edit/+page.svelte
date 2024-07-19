@@ -23,14 +23,22 @@
   let hasChanged = $derived.by(function () {
     return !deepEq(person, originalPerson);
   });
+  let error = $state("");
 
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
-    person = await save<PersonResponse<PersonExpand>>("person", {
-      ...person,
-    });
-    originalPerson = person;
-    alerts.info("Details saved.", 5000);
+    error = "";
+    // TODO: Remove
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      person = await save<PersonResponse<PersonExpand>>("person", {
+        ...person,
+      });
+      originalPerson = person;
+      alerts.info("Details saved.", 5000);
+    } catch {
+      error = "Error saving details. Please try again.";
+    }
   }
 
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
@@ -73,6 +81,11 @@
     <span>Ethnicity</span>
     <input type="text" class="input" bind:value={person.ethnicity} />
   </label>
+  {#if error}
+    <div>
+      <span class="card preset-filled-error-100-900 p-2">{error}</span>
+    </div>
+  {/if}
   {#if client.authStore.isValid}
     <div class="self-end">
       {#if hasChanged}
