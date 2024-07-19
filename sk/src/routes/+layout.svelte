@@ -1,8 +1,4 @@
 <script>
-  // By default app.css was before app.scss but it resulted in unwanted CSS
-  // selector precendence for stylings of <a> tags (and maybe more), so I
-  // reversed them.
-  import "../app.scss";
   import "../app.css";
   import { base } from "$app/paths";
   import { page } from "$app/stores";
