@@ -13,17 +13,23 @@
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
   import Lifestyle from "./Lifestyle.svelte";
   import NewLifestyle from "./NewLifestyle.svelte";
+  import deepEq from "fast-deep-equal";
 
   const { data } = $props();
 
   // Person
   let person = $state(data.person);
+  let originalPerson = $state(data.person);
+  let hasChanged = $derived.by(function () {
+    return !deepEq(person, originalPerson);
+  });
 
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
     person = await save<PersonResponse<PersonExpand>>("person", {
       ...person,
     });
+    originalPerson = person;
     alerts.info("Post saved.", 5000);
     history.back();
   }
@@ -41,11 +47,20 @@
   }
 </script>
 
-<h2 class="h2">General Details</h2>
-<form onsubmit={store.run} class="space-y-4">
+<h2 class="h2 mt-8">General Details</h2>
+<form onsubmit={store.run} class="flex flex-col space-y-4">
   <label class="label">
     <span>Year of Birth</span>
-    <input type="text" class="input" bind:value={person.birthYear} />
+    <input
+      type="number"
+      class="input"
+      value={person.birthYear}
+      oninput={(e) =>
+        (person = {
+          ...person,
+          birthYear: parseInt(e.currentTarget.value, 10),
+        })}
+    />
   </label>
   <label class="label">
     <span>Year of Death</span>
@@ -60,13 +75,19 @@
     <input type="text" class="input" bind:value={person.ethnicity} />
   </label>
   {#if client.authStore.isValid}
-    <button class="btn preset-filled" type="submit">
-      {#if $store}
-        <ProgressRing size="size-7" />
-      {:else}
-        Save
+    <div class="self-end">
+      {#if hasChanged}
+        <span class="badge preset-filled-warning-500 mr-2">Unsaved changes</span
+        >
       {/if}
-    </button>
+      <button class="btn preset-filled" type="submit" disabled={!hasChanged}>
+        {#if $store}
+          <ProgressRing size="size-7" />
+        {:else}
+          Save
+        {/if}
+      </button>
+    </div>
   {:else}
     <div class="card preset-filled-warning-100-900 p-4 text-center">
       <p>Login to Update</p>
@@ -74,7 +95,7 @@
   {/if}
 </form>
 
-<h2 class="h2">Lifestyle</h2>
+<h2 class="h2 mt-8">Lifestyle</h2>
 <!-- TODO: List existing lifestyle issues -->
 {#if lifestyles.length > 0}
   <div class="flex flex-col gap-2">
@@ -110,4 +131,4 @@
 <!-- TODO: Don't allow editing of the 'type', only details -->
 <!-- TODO: Allow creating a new one -->
 
-<h2 class="h2">Conditions</h2>
+<h2 class="h2 mt-8">Conditions</h2>
