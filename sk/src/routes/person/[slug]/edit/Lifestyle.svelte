@@ -43,17 +43,24 @@
       ></textarea>
     </label>
     {#if client.authStore.isValid}
-      <button
-        class="btn preset-filled self-end"
-        type="submit"
-        disabled={$store || !hasChanged()}
-      >
-        {#if $store}
-          <ProgressRing size="size-7" />
-        {:else}
-          Update
+      <div class="self-end">
+        {#if hasChanged()}
+          <span class="badge preset-filled-warning-500 mr-2"
+            >Unsaved changes</span
+          >
         {/if}
-      </button>
+        <button
+          class="btn preset-filled self-end"
+          type="submit"
+          disabled={$store || !hasChanged()}
+        >
+          {#if $store}
+            <ProgressRing size="size-7" />
+          {:else}
+            Save
+          {/if}
+        </button>
+      </div>
     {/if}
   </div>
 </form>
