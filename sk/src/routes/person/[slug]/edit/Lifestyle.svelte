@@ -9,7 +9,7 @@
   let { lifestyle }: { lifestyle: PersonLifestyleResponse } = $props();
   let originalDetails = $state(lifestyle.details);
   let updatedDetails = $state(lifestyle.details);
-  let hasChanged = $derived(() => originalDetails !== updatedDetails);
+  let hasChanged = $derived.by(() => originalDetails !== updatedDetails);
 
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -44,7 +44,7 @@
     </label>
     {#if client.authStore.isValid}
       <div class="self-end">
-        {#if hasChanged()}
+        {#if hasChanged}
           <span class="badge preset-filled-warning-500 mr-2"
             >Unsaved changes</span
           >
@@ -52,7 +52,7 @@
         <button
           class="btn preset-filled self-end"
           type="submit"
-          disabled={$store || !hasChanged()}
+          disabled={$store || !hasChanged}
         >
           {#if $store}
             <ProgressRing size="size-7" />
