@@ -30,8 +30,7 @@
       ...person,
     });
     originalPerson = person;
-    alerts.info("Post saved.", 5000);
-    history.back();
+    alerts.info("Details saved.", 5000);
   }
 
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
