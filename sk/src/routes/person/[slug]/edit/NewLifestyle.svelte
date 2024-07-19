@@ -56,10 +56,11 @@
 </script>
 
 <form
-  class="card preset-filled-surface-100-900 border-surface-200-800 block max-w-md overflow-hidden border p-2"
+  class="card preset-filled-secondary-100-900 border-secondary-200-800 block max-w-md overflow-hidden border p-2"
   onsubmit={store.run}
 >
-  <div class="flex flex-col items-start gap-3">
+  <h3 class="h3">New Lifestyle</h3>
+  <div class="mt-2 flex flex-col items-start gap-3">
     <select
       class="select rounded-container"
       bind:value={unsavedLifestyle.lifestyle}

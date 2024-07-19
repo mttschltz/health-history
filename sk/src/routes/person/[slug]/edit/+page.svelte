@@ -15,13 +15,9 @@
   import NewLifestyle from "./NewLifestyle.svelte";
 
   const { data } = $props();
-  let person = $state(data.person);
-  const lifestyles = $state(data.lifestyles);
-  const lifestyleTypes = $derived.by(() => lifestyles.map((l) => l.lifestyle));
 
-  function addLifestyle(lifestyle: PersonLifestyleResponse) {
-    lifestyles.push(lifestyle);
-  }
+  // Person
+  let person = $state(data.person);
 
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -33,6 +29,16 @@
   }
 
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
+
+  // Lifestyles
+  const lifestyles = $state(data.lifestyles);
+  const lifestyleTypes = $derived.by(() => lifestyles.map((l) => l.lifestyle));
+  let showNewLifestyle = $state(false);
+
+  function addLifestyle(lifestyle: PersonLifestyleResponse) {
+    lifestyles.push(lifestyle);
+    showNewLifestyle = false;
+  }
 </script>
 
 <h2 class="h2">General Details</h2>
@@ -79,11 +85,27 @@
 {:else}
   <p>No lifestyle entries found.</p>
 {/if}
-<button type="button" class="btn preset-outlined mt-2">
-  <span>Add lifestyle</span>
-  <span>&rarr;</span>
-</button>
-<NewLifestyle existingLifestyleTypes={lifestyleTypes} {person} {addLifestyle} />
+
+{#if !showNewLifestyle}
+  <button
+    type="button"
+    class="btn preset-outlined mt-2"
+    onclick={() => (showNewLifestyle = true)}
+  >
+    <span>Add lifestyle</span>
+    <span>&rarr;</span>
+  </button>
+{/if}
+
+{#if showNewLifestyle}
+  <div class="mt-2">
+    <NewLifestyle
+      existingLifestyleTypes={lifestyleTypes}
+      {person}
+      {addLifestyle}
+    />
+  </div>
+{/if}
 
 <!-- TODO: Don't allow editing of the 'type', only details -->
 <!-- TODO: Allow creating a new one -->
