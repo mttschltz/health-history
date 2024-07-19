@@ -13,7 +13,9 @@
 			"extensions": [
 				"golang.go",
 				"esbenp.prettier-vscode",
-				"svelte.svelte-vscode"
+				"svelte.svelte-vscode",
+				"GitHub.copilot",
+				"GitHub.copilot-chat"
 			]
 		}
 	}
