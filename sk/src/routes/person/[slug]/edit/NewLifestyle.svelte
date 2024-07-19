@@ -14,9 +14,11 @@
   let {
     existingLifestyleTypes,
     person,
+    addLifestyle,
   }: {
     existingLifestyleTypes: PersonLifestyleLifestyleOptions[];
     person: PersonResponse;
+    addLifestyle: (lifestyle: PersonLifestyleResponse) => void;
   } = $props();
   let unsavedLifestyle = $state({
     lifestyle: "",
@@ -46,7 +48,7 @@
         ...unsavedLifestyle,
       }
     );
-    // TODO: Pass up to parent to insert
+    addLifestyle(createdLifestyle);
     alerts.info("Lifestyle created.", 5000);
   }
 

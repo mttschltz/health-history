@@ -7,6 +7,7 @@
   import type {
     PostsResponse,
     PersonResponse,
+    PersonLifestyleResponse,
   } from "$lib/pocketbase/generated-types.js";
   import z from "zod";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
@@ -18,6 +19,10 @@
   const lifestyles = $state(data.lifestyles);
   const lifestyleTypes = $derived.by(() => lifestyles.map((l) => l.lifestyle));
 
+  function addLifestyle(lifestyle: PersonLifestyleResponse) {
+    lifestyles.push(lifestyle);
+  }
+
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
     person = await save<PersonResponse<PersonExpand>>("person", {
@@ -26,6 +31,7 @@
     alerts.info("Post saved.", 5000);
     history.back();
   }
+
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
 </script>
 
@@ -77,7 +83,7 @@
   <span>Add lifestyle</span>
   <span>&rarr;</span>
 </button>
-<NewLifestyle existingLifestyleTypes={lifestyleTypes} {person} />
+<NewLifestyle existingLifestyleTypes={lifestyleTypes} {person} {addLifestyle} />
 
 <!-- TODO: Don't allow editing of the 'type', only details -->
 <!-- TODO: Allow creating a new one -->
