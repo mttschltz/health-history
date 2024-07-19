@@ -102,7 +102,7 @@
 <h2 class="h2">Lifestyle</h2>
 <!-- TODO: List existing lifestyle issues -->
 {#if lifestyles.length > 0}
-  <div>
+  <div class="flex flex-col gap-2">
     {#each lifestyles as lifestyle (lifestyle.id)}
       <Lifestyle {lifestyle} />
     {/each}
