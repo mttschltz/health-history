@@ -1,5 +1,6 @@
 import { client } from "$lib/pocketbase";
 import type {
+  PersonLifestyleResponse,
   PersonResponse,
   PostsRecord,
   PostsResponse,
@@ -8,18 +9,27 @@ import type exp from "constants";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ params, fetch, parent }) => {
+  // ---
+  // Person
+  // ---
+  //
+  // 'slug' comes from the request param, i.e. folder name '[slug]'. It should
+  // be [id].
   const { slug } = params;
   const filter = client.filter("id = {:slug}", { slug });
-  const coll = client.collection("person");
+  const personCollection = client.collection("person");
   const options = {
     fetch,
     expand: "birthMother,birthFather",
   };
-  const person = await coll.getFirstListItem<PersonResponse<PersonExpand>>(
-    filter,
-    options
-  );
-  const siblings = await coll.getFullList<PersonResponse>({
+  const person = await personCollection.getFirstListItem<
+    PersonResponse<PersonExpand>
+  >(filter, options);
+
+  // ---
+  // Siblings
+  // ---
+  const siblings = await personCollection.getFullList<PersonResponse>({
     filter: client.filter(
       "id != {:id} && ((birthMother != '' && birthMother={:birthMother}) || (birthFather != '' && birthFather={:birthFather}))",
       {
@@ -31,14 +41,32 @@ export const load: LayoutLoad = async ({ params, fetch, parent }) => {
   });
   siblings.sort((a, b) => a.birthYear - b.birthYear);
 
+  // ---
+  // Lifestyle
+  // ---
+  const lifestyleCollection = client.collection("person_lifestyle");
+  const lifestyles =
+    await lifestyleCollection.getFullList<PersonLifestyleResponse>({
+      filter: client.filter("person = {:id}", {
+        id: person.id,
+      }),
+    });
+
+  // ---
+  // Conditions
+  // ---
+  // TODO:
+
+  // ---
+  // Other
+  // ---
   const { metadata } = await parent();
   metadata.title = metadata.headline = `${person.fullName}'s family`;
 
-  console.log(`xyz person page title: ${person.fullName}`);
-
   return {
-    title: person.fullName,
+    lifestyles,
     person,
     siblings,
+    title: person.fullName,
   };
 };

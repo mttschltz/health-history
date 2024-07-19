@@ -9,6 +9,7 @@ export enum Collections {
 	Auditlog = "auditlog",
 	Person = "person",
 	PersonCondition = "person_condition",
+	PersonLifestyle = "person_lifestyle",
 	Posts = "posts",
 	Users = "users",
 }
@@ -51,15 +52,6 @@ export enum PersonSexOptions {
 	"Male" = "Male",
 	"Female" = "Female",
 }
-
-export enum PersonLifestyleIssuesOptions {
-	"smoking" = "smoking",
-	"alcohol" = "alcohol",
-	"job" = "job",
-	"overweight" = "overweight",
-	"underweight" = "underweight",
-	"other" = "other",
-}
 export type PersonRecord = {
 	Sex?: PersonSexOptions
 	birthFather?: RecordIdString
@@ -68,9 +60,9 @@ export type PersonRecord = {
 	deathAge?: number
 	deathYear?: number
 	ethnicity?: string
+	files?: string[]
 	fullName: string
-	lifestyleIssueDetails?: HTMLString
-	lifestyleIssues?: PersonLifestyleIssuesOptions[]
+	notes?: HTMLString
 }
 
 export enum PersonConditionConditionOptions {
@@ -93,8 +85,24 @@ export enum PersonConditionConditionOptions {
 export type PersonConditionRecord = {
 	condition: PersonConditionConditionOptions
 	details?: HTMLString
+	files?: string[]
 	person: RecordIdString
 	type?: string
+}
+
+export enum PersonLifestyleLifestyleOptions {
+	"smoking" = "smoking",
+	"alcohol" = "alcohol",
+	"drugs" = "drugs",
+	"job" = "job",
+	"weight" = "weight",
+	"other" = "other",
+}
+export type PersonLifestyleRecord = {
+	details?: HTMLString
+	files?: string[]
+	lifestyle: PersonLifestyleLifestyleOptions
+	person: RecordIdString
 }
 
 export type PostsRecord = {
@@ -114,6 +122,7 @@ export type UsersRecord = {
 export type AuditlogResponse<Tdata = unknown, Toriginal = unknown, Texpand = unknown> = Required<AuditlogRecord<Tdata, Toriginal>> & BaseSystemFields<Texpand>
 export type PersonResponse<Texpand = unknown> = Required<PersonRecord> & BaseSystemFields<Texpand>
 export type PersonConditionResponse<Texpand = unknown> = Required<PersonConditionRecord> & BaseSystemFields<Texpand>
+export type PersonLifestyleResponse<Texpand = unknown> = Required<PersonLifestyleRecord> & BaseSystemFields<Texpand>
 export type PostsResponse<Texpand = unknown> = Required<PostsRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
@@ -123,6 +132,7 @@ export type CollectionRecords = {
 	auditlog: AuditlogRecord
 	person: PersonRecord
 	person_condition: PersonConditionRecord
+	person_lifestyle: PersonLifestyleRecord
 	posts: PostsRecord
 	users: UsersRecord
 }
@@ -131,6 +141,7 @@ export type CollectionResponses = {
 	auditlog: AuditlogResponse
 	person: PersonResponse
 	person_condition: PersonConditionResponse
+	person_lifestyle: PersonLifestyleResponse
 	posts: PostsResponse
 	users: UsersResponse
 }
@@ -142,6 +153,7 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'auditlog'): RecordService<AuditlogResponse>
 	collection(idOrName: 'person'): RecordService<PersonResponse>
 	collection(idOrName: 'person_condition'): RecordService<PersonConditionResponse>
+	collection(idOrName: 'person_lifestyle'): RecordService<PersonLifestyleResponse>
 	collection(idOrName: 'posts'): RecordService<PostsResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }

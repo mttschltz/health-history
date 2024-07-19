@@ -106,5 +106,3 @@
     >
   {/if}
 </article>
-
-<style></style>

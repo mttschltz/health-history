@@ -10,9 +10,11 @@
   } from "$lib/pocketbase/generated-types.js";
   import z from "zod";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
+  import Lifestyle from "./Lifestyle.svelte";
 
   const { data } = $props();
   let person = $state(data.person);
+  const lifestyles = $state(data.lifestyles);
   // let fileInput = $state() as HTMLInputElement;
   // let toBeRemoved = $state([]);
   // $effect(() => {
@@ -54,8 +56,8 @@
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
 </script>
 
+<h2 class="h2">General Details</h2>
 <form onsubmit={store.run} class="space-y-4">
-  <output>ID: {person.id ?? "-"}</output>
   <label class="label">
     <span>Year of Birth</span>
     <input type="text" class="input" bind:value={person.birthYear} />
@@ -67,6 +69,10 @@
   <label class="label">
     <span>Age at Death</span>
     <input type="text" class="input" bind:value={person.deathAge} />
+  </label>
+  <label class="label">
+    <span>Ethnicity</span>
+    <input type="text" class="input" bind:value={person.ethnicity} />
   </label>
   <!-- <div data-label="files">
       <FileInput bind:fileInput pasteFile={true} multiple={true} />
@@ -92,3 +98,20 @@
     </div>
   {/if}
 </form>
+
+<h2 class="h2">Lifestyle</h2>
+<!-- TODO: List existing lifestyle issues -->
+{#if lifestyles.length > 0}
+  <div>
+    {#each lifestyles as lifestyle (lifestyle.id)}
+      <Lifestyle {lifestyle} />
+    {/each}
+  </div>
+{:else}
+  <p>No lifestyle entries found.</p>
+{/if}
+
+<!-- TODO: Don't allow editing of the 'type', only details -->
+<!-- TODO: Allow creating a new one -->
+
+<h2 class="h2">Conditions</h2>
