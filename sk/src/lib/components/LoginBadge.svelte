@@ -55,7 +55,7 @@
   <Dialog>
     {#snippet trigger(show)}
       <button onclick={show}>
-        {signupAllowed ? "Sign In / Sign Up" : "Sign In"}
+        {signupAllowed ? "Log In / Sign Up" : "Log In"}
       </button>
     {/snippet}
     <Alerts />

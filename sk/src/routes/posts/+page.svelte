@@ -33,7 +33,7 @@
     Generate a random post
   </button>
   {#snippet otherwise()}
-    <p>Please Sign In to create/edit posts.</p>
+    <p>Please Log In to create/edit posts.</p>
   {/snippet}
 </LoginGuard>
 

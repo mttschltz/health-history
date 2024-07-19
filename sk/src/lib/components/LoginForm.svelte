@@ -45,7 +45,7 @@
   <label title="sign-in as admin">
     <input type="checkbox" bind:checked={form.admin} />Admin
   </label>
-  <button type="submit" onclick={() => (signup = false)}>Sign In</button>
+  <button type="submit" onclick={() => (signup = false)}>Log In</button>
 {/snippet}
 
 <form onsubmit={submit}>
@@ -53,7 +53,7 @@
     {#if signupAllowed}
       <TabGroup bind:active>
         {#snippet tabs()}
-          <Tab key="SignIn">Sign In</Tab>
+          <Tab key="SignIn">Log In</Tab>
           <Tab key="SignUp">Sign Up</Tab>
         {/snippet}
         <TabContent key="SignIn">
@@ -89,7 +89,7 @@
         </TabContent>
       </TabGroup>
     {:else}
-      <h2>Sign In</h2>
+      <h2>Log In</h2>
       {@render signin()}
     {/if}
   {/if}
