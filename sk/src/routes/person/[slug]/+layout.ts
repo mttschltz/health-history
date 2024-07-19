@@ -7,11 +7,6 @@ import type {
 import type exp from "constants";
 import type { LayoutLoad } from "./$types";
 
-type PersonExpand = {
-  birthMother: PersonResponse;
-  birthFather: PersonResponse;
-};
-
 export const load: LayoutLoad = async ({ params, fetch, parent }) => {
   const { slug } = params;
   const filter = client.filter("id = {:slug}", { slug });

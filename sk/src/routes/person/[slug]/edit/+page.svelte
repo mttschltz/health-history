@@ -4,7 +4,10 @@
   import Spinner, { activityStore } from "$lib/components/Spinner.svelte";
   import { authModel, client, save } from "$lib/pocketbase";
   import FileField from "$lib/pocketbase/FileField.svelte";
-  import type { PostsResponse } from "$lib/pocketbase/generated-types.js";
+  import type {
+    PostsResponse,
+    PersonResponse,
+  } from "$lib/pocketbase/generated-types.js";
   import z from "zod";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
 
@@ -34,14 +37,14 @@
     // if (success) {
     //   const files = fileInput?.files;
     //   const user = client.authStore.isAdmin ? "" : $authModel?.id;
-    //   person = await save<PostsResponse>("posts", {
-    //     ...data,
-    //     files,
-    //     user,
-    //     "files-": toBeRemoved,
-    //   });
-    //   alerts.info("Post saved.", 5000);
-    //   history.back();
+    person = await save<PersonResponse<PersonExpand>>("person", {
+      ...person,
+      // files,
+      // user,
+      // "files-": toBeRemoved,
+    });
+    alerts.info("Post saved.", 5000);
+    history.back();
     // } else {
     //   Object.entries(error.flatten().fieldErrors).forEach(([k, v]) =>
     //     alerts.error(`${k}: ${v}`)
@@ -51,25 +54,23 @@
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
 </script>
 
-<form onsubmit={store.run}>
+<form onsubmit={store.run} class="space-y-4">
   <output>ID: {person.id ?? "-"}</output>
   <label class="label">
     <span>Year of Birth</span>
     <input type="text" class="input" bind:value={person.birthYear} />
   </label>
-  <div>
-    <label class="label">
-      <span>Year of Death</span>
-      <input type="text" class="input" bind:value={person.deathYear} />
-    </label>
-    <label class="label">
-      <span>Age at Death</span>
-      <input type="text" class="input" bind:value={person.deathAge} />
-    </label>
-    <!-- <div data-label="files">
+  <label class="label">
+    <span>Year of Death</span>
+    <input type="text" class="input" bind:value={person.deathYear} />
+  </label>
+  <label class="label">
+    <span>Age at Death</span>
+    <input type="text" class="input" bind:value={person.deathAge} />
+  </label>
+  <!-- <div data-label="files">
       <FileInput bind:fileInput pasteFile={true} multiple={true} />
     </div> -->
-  </div>
   <!-- <FileField record={person} fieldName="files" bind:toBeRemoved /> -->
   <!-- <div data-label="body">
     <textarea
@@ -77,11 +78,17 @@
       placeholder="Details of lifestyle issues"
     ></textarea>
   </div> -->
-  <button class="btn preset-filled" type="submit">
-    {#if !$store}
-      <ProgressRing size="size-7" />
-    {:else}
-      Save
-    {/if}
-  </button>
+  {#if client.authStore.isValid}
+    <button class="btn preset-filled" type="submit">
+      {#if $store}
+        <ProgressRing size="size-7" />
+      {:else}
+        Save
+      {/if}
+    </button>
+  {:else}
+    <div class="card preset-filled-warning-100-900 p-4 text-center">
+      <p>Login to Update</p>
+    </div>
+  {/if}
 </form>
