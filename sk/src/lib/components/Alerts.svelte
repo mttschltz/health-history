@@ -1,15 +1,38 @@
 <script lang="ts" context="module">
-  interface Alert {
+  interface AlertMessage {
     message: string;
     type: string;
     timeout?: number;
     html?: boolean;
   }
+  interface Alert {
+    message: string;
+    type: string;
+    timeout?: number;
+    html?: boolean;
+    class: string;
+  }
 
   let _alerts = $state<Alert[]>([]);
   export const alerts = {
-    add({ message, type = "info", timeout = 0, html = false }: Alert) {
-      const alert = { message, type, html };
+    add({ message, type = "info", timeout = 0, html = false }: AlertMessage) {
+      let clss: string;
+      switch (type) {
+        case "success":
+          clss = "preset-filled-success-500";
+          break;
+        case "error":
+          clss = "preset-filled-error-500";
+          break;
+        case "warning":
+          clss = "preset-filled-warning-500";
+          break;
+        case "info":
+        default:
+          clss = "preset-filled-surface-500";
+          break;
+      }
+      const alert = { message, type, html, class: clss };
       _alerts = _alerts.concat(alert);
       if (timeout) {
         setTimeout(() => {
@@ -54,41 +77,34 @@
 <!-- to display alerts for unhandled promise rejections -->
 <svelte:window {onunhandledrejection} />
 
-<article>
-  {#if _alerts.length > 1}
-    <button onclick={dismissAll} class="dismiss">&times; dismiss all</button>
-  {/if}
+<article class="flex flex-col gap-1">
   {#each _alerts as alert}
-    <blockquote class={alert.type}>
-      <button onclick={() => dismiss(alert)} class="dismiss">&times;</button>
-      {#if alert.html}
-        {@html alert.message}
-      {:else}
-        {alert.message}
-      {/if}
-    </blockquote>
+    <div
+      class={`card ${alert.class} grid grid-cols-1 items-center gap-4 p-4 lg:grid-cols-[1fr_auto]`}
+    >
+      <div>
+        {#if alert.type === "success"}
+          <p class="font-bold">Success</p>
+        {:else if alert.type === "error"}
+          <p class="font-bold">Error</p>
+        {/if}
+        {#if alert.html}
+          {@html alert.message}
+        {:else}
+          {alert.message}
+        {/if}
+      </div>
+      <div class="flex gap-1">
+        <button class="btn" onclick={() => dismiss(alert)}>Dismiss</button>
+      </div>
+    </div>
   {/each}
+  {#if _alerts.length > 1}
+    <button
+      onclick={dismissAll}
+      class="btn preset-outlined-primary-500 self-end">Dismiss All</button
+    >
+  {/if}
 </article>
 
-<style>
-  .dismiss {
-    cursor: pointer;
-    padding: 2px 7px;
-    border-radius: 15px;
-  }
-  blockquote {
-    margin: 0 0;
-  }
-  .success {
-    color: var(--links);
-    border-left-color: var(--links);
-  }
-  .warning {
-    color: var(--variable);
-    border-left-color: var(--selection);
-  }
-  .error {
-    color: var(--danger);
-    border-left-color: var(--variable);
-  }
-</style>
+<style></style>
