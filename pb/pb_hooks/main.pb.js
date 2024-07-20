@@ -67,7 +67,7 @@ routerAdd(
     const config = parseJSONFile(`${__hooks}/config.json`);
     const settings = $app.settings();
     config.site.name = settings.meta.appName;
-    config.site.copyright = settings.meta.appName;
+    config.site.copyright = "Quite Nifty";
     c.json(200, config);
   } /* no auth */
 );
