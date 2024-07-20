@@ -8,6 +8,7 @@
   import { activityStore } from "$lib/components/Spinner.svelte";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
   import { alertSuccess } from "$lib/components/alert";
+  import { localDelay } from "$lib/network/local-delay";
 
   let {
     lifestyle,
@@ -27,8 +28,7 @@
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
     error = "";
-    // TODO: Remove
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await localDelay();
     try {
       lifestyle = await save<PersonLifestyleResponse>(
         "person_lifestyle",

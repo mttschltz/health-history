@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { alerts } from "$lib/components/Alerts.svelte";
   import { activityStore } from "$lib/components/Spinner.svelte";
   import { client, save, authModel } from "$lib/pocketbase";
   import {
@@ -16,6 +15,7 @@
   import Lifestyle from "./Lifestyle.svelte";
   import Condition from "./Condition.svelte";
   import { alertSuccess } from "$lib/components/alert";
+  import { localDelay } from "$lib/network/local-delay";
 
   const writeAccess = $derived(!!$authModel?.writeAccess);
 
@@ -32,8 +32,7 @@
   async function onsubmit(e: SubmitEvent) {
     e.preventDefault();
     error = "";
-    // TODO: Remove
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await localDelay();
     try {
       person = await save<PersonResponse<PersonExpand>>("person", {
         ...person,
@@ -274,7 +273,7 @@
     </div>
   {/if}
   {#if client.authStore.isValid}
-    <div class="self-end">
+    <div class="flex items-center self-end">
       {#if hasChanged}
         <span class="badge preset-filled-warning-500 mr-2">Unsaved changes</span
         >
