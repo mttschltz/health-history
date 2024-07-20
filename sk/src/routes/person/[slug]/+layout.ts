@@ -72,6 +72,6 @@ export const load: LayoutLoad = async ({ params, fetch, parent }) => {
     lifestyles,
     person,
     siblings,
-    title: person.fullName,
+    title: `${person.fullName}`,
   };
 };
