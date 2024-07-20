@@ -1,11 +1,9 @@
 import { client } from "$lib/pocketbase";
 import type {
+  PersonConditionResponse,
   PersonLifestyleResponse,
   PersonResponse,
-  PostsRecord,
-  PostsResponse,
 } from "$lib/pocketbase/generated-types";
-import type exp from "constants";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ params, fetch, parent }) => {
@@ -55,7 +53,13 @@ export const load: LayoutLoad = async ({ params, fetch, parent }) => {
   // ---
   // Conditions
   // ---
-  // TODO:
+  const conditionCollection = client.collection("person_condition");
+  const conditions =
+    await conditionCollection.getFullList<PersonConditionResponse>({
+      filter: client.filter("person = {:id}", {
+        id: person.id,
+      }),
+    });
 
   // ---
   // Other
@@ -64,6 +68,7 @@ export const load: LayoutLoad = async ({ params, fetch, parent }) => {
   metadata.title = metadata.headline = `${person.fullName}'s family`;
 
   return {
+    conditions,
     lifestyles,
     person,
     siblings,

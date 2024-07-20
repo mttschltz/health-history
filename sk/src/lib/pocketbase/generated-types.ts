@@ -62,11 +62,10 @@ export type PersonRecord = {
 	ethnicity?: string
 	files?: string[]
 	fullName: string
-	notes?: HTMLString
+	notes?: string
 }
 
 export enum PersonConditionConditionOptions {
-	"asthma" = "asthma",
 	"birth-defect" = "birth-defect",
 	"diabetes-type-1" = "diabetes-type-1",
 	"diabetes-type-2" = "diabetes-type-2",
@@ -80,11 +79,14 @@ export enum PersonConditionConditionOptions {
 	"cancer" = "cancer",
 	"stillbirth-miscarriage" = "stillbirth-miscarriage",
 	"stroke" = "stroke",
+	"lung" = "lung",
+	"neuro" = "neuro",
+	"liver" = "liver",
 	"other" = "other",
 }
 export type PersonConditionRecord = {
 	condition: PersonConditionConditionOptions
-	details?: HTMLString
+	details?: string
 	files?: string[]
 	person: RecordIdString
 	type?: string
@@ -99,7 +101,7 @@ export enum PersonLifestyleLifestyleOptions {
 	"other" = "other",
 }
 export type PersonLifestyleRecord = {
-	details?: HTMLString
+	details?: string
 	files?: string[]
 	lifestyle: PersonLifestyleLifestyleOptions
 	person: RecordIdString

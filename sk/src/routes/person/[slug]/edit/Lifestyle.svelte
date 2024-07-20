@@ -1,15 +1,27 @@
 <script lang="ts">
-  import type { PersonLifestyleResponse } from "$lib/pocketbase/generated-types";
+  import type {
+    PersonLifestyleRecord,
+    PersonLifestyleResponse,
+    PersonRecord,
+    PersonResponse,
+  } from "$lib/pocketbase/generated-types";
+  import { PersonLifestyleLifestyleOptions } from "$lib/pocketbase/generated-types";
   import { authModel, client, save } from "$lib/pocketbase";
   import { activityStore } from "$lib/components/Spinner.svelte";
   import { alerts } from "$lib/components/Alerts.svelte";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
-  import { updated } from "$app/stores";
 
-  let { lifestyle }: { lifestyle: PersonLifestyleResponse } = $props();
+  let {
+    lifestyle,
+  }: {
+    lifestyle: PersonLifestyleResponse | PersonLifestyleRecord;
+  } = $props();
+  let isCreate = $derived.by(() => {
+    return !("id" in lifestyle);
+  });
   let originalDetails = $state(lifestyle.details);
-  let updatedDetails = $state(lifestyle.details);
-  let hasChanged = $derived.by(() => originalDetails !== updatedDetails);
+  let expandDetails = $state(!!lifestyle.details);
+  const hasChanged = $derived.by(() => lifestyle.details !== originalDetails);
   let error = $state("");
 
   async function onsubmit(e: SubmitEvent) {
@@ -18,23 +30,50 @@
     // TODO: Remove
     await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
-      lifestyle = await save<PersonLifestyleResponse>("person_lifestyle", {
-        ...lifestyle,
-        details: updatedDetails,
-      });
+      lifestyle = await save<PersonLifestyleResponse>(
+        "person_lifestyle",
+        lifestyle
+      );
       originalDetails = lifestyle.details;
-      updatedDetails = lifestyle.details;
-      alerts.info("Lifestyle saved.", 5000);
+      expandDetails = !!lifestyle.details;
+      if (isCreate) {
+        alerts.info("Lifestyle created.", 5000);
+      } else {
+        alerts.info("Lifestyle updated.", 5000);
+      }
     } catch {
-      error = "Error saving lifestyle. Please try again.";
+      if (isCreate) {
+        error = "Error creating lifestyle. Please try again.";
+      } else {
+        error = "Error saving lifestyle. Please try again.";
+      }
     }
   }
 
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
+
+  function lifestyleTitle(
+    lifestyle: PersonLifestyleResponse | PersonLifestyleRecord
+  ) {
+    switch (lifestyle.lifestyle) {
+      case PersonLifestyleLifestyleOptions.smoking:
+        return "Smoker";
+      case PersonLifestyleLifestyleOptions.alcohol:
+        return "Heavy drinker";
+      case PersonLifestyleLifestyleOptions.drugs:
+        return "Drug use";
+      case PersonLifestyleLifestyleOptions.job:
+        return "Unhealthy job";
+      case PersonLifestyleLifestyleOptions.weight:
+        return "Weight concerns";
+      case PersonLifestyleLifestyleOptions.other:
+        return "Other";
+    }
+  }
 </script>
 
 <form
-  class="card preset-filled-surface-100-900 border-surface-200-800 block max-w-md overflow-hidden border p-2"
+  class={`card ${isCreate ? "preset-outlined-secondary-100-900" : "preset-filled-secondary-100-900"} border-secondary-200-800 block max-w-md overflow-hidden border p-2`}
   onsubmit={store.run}
 >
   <div class="flex flex-col items-start gap-3">
@@ -43,35 +82,64 @@
         <span class="card preset-filled-error-100-900 p-2">{error}</span>
       </div>
     {/if}
-    <span class="badge preset-filled-primary-500">{lifestyle.lifestyle}</span>
-    <label class="label">
-      <textarea
-        class="textarea rounded-3xl"
-        rows="3"
-        bind:value={updatedDetails}
-        placeholder="Details of lifestyle issues"
-        disabled={$store}
-      ></textarea>
-    </label>
-    {#if client.authStore.isValid}
-      <div class="self-end">
-        {#if hasChanged}
-          <span class="badge preset-filled-warning-500 mr-2"
-            >Unsaved changes</span
-          >
-        {/if}
-        <button
-          class="btn preset-filled self-end"
-          type="submit"
-          disabled={$store || !hasChanged}
-        >
-          {#if $store}
-            <ProgressRing size="size-7" />
-          {:else}
-            Save
-          {/if}
-        </button>
-      </div>
+    <div class="flex w-full justify-between">
+      <span class="badge preset-filled-primary-500"
+        >{lifestyleTitle(lifestyle)}</span
+      >
+      {#if client.authStore.isValid}
+        <div>
+          <div class="flex items-center gap-3">
+            {#if !expandDetails}
+              {#if lifestyle.details}
+                <button
+                  class="btn"
+                  type="button"
+                  onclick={() => (expandDetails = true)}>Edit details</button
+                >
+              {:else}
+                <button
+                  class="btn italic"
+                  type="button"
+                  onclick={() => (expandDetails = true)}>Provide Details</button
+                >
+              {/if}
+            {/if}
+            {#if hasChanged}
+              <span class="badge preset-filled-warning-500 mr-2"
+                >Unsaved changes</span
+              >
+            {/if}
+            {#if $store}
+              <button class="btn preset-filled" type="submit" disabled={$store}>
+                <ProgressRing size="size-7" />
+              </button>
+            {:else if isCreate}
+              <button class="btn preset-filled" type="submit" disabled={$store}>
+                Add
+              </button>
+            {:else if hasChanged}
+              <button class="btn preset-filled" type="submit" disabled={$store}>
+                Update
+              </button>
+            {:else}
+              <span class="pr-4 text-2xl">✅</span>
+            {/if}
+          </div>
+        </div>
+      {/if}
+    </div>
+    {#if expandDetails}
+      <label class="label">
+        <textarea
+          class="textarea rounded-3xl"
+          rows="3"
+          value={lifestyle.details}
+          oninput={(e) =>
+            (lifestyle = { ...lifestyle, details: e.currentTarget.value })}
+          placeholder="Details of lifestyle issues"
+          disabled={$store}
+        ></textarea>
+      </label>
     {/if}
   </div>
 </form>

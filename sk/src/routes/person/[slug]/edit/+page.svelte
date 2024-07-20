@@ -7,10 +7,14 @@
     type PersonLifestyleResponse,
     PersonLifestyleLifestyleOptions,
     type PersonLifestyleRecord,
+    PersonConditionConditionOptions,
+    type PersonConditionRecord,
+    type PersonConditionResponse,
   } from "$lib/pocketbase/generated-types.js";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
   import deepEq from "fast-deep-equal";
-  import NewLifeStyle from "./NewLifeStyle.svelte";
+  import Lifestyle from "./Lifestyle.svelte";
+  import Condition from "./Condition.svelte";
 
   const { data } = $props();
 
@@ -74,7 +78,132 @@
       } satisfies PersonLifestyleRecord);
       return values;
     });
-  let showNewLifestyle = $state(false);
+
+  // Conditions
+  const heartConditions = [
+    PersonConditionConditionOptions["heart-attack"],
+    PersonConditionConditionOptions["heart-disease"],
+    PersonConditionConditionOptions["high-blood-pressure"],
+    PersonConditionConditionOptions["high-cholesterol"],
+    PersonConditionConditionOptions["stroke"],
+  ];
+  const commonConditions = [
+    PersonConditionConditionOptions["diabetes-type-1"],
+    PersonConditionConditionOptions["diabetes-type-2"],
+    PersonConditionConditionOptions["cancer"],
+    PersonConditionConditionOptions["mental-illness"],
+    PersonConditionConditionOptions["neuro"],
+    PersonConditionConditionOptions["osteoporosis"],
+  ];
+  const lessCommonConditions = [
+    PersonConditionConditionOptions["genetic-disorder"],
+    PersonConditionConditionOptions["liver"],
+    PersonConditionConditionOptions["lung"],
+  ];
+  const existingConditions = $state(data.conditions);
+  const groupHeart: (PersonConditionRecord | PersonConditionResponse)[] =
+    $derived.by(() => {
+      return heartConditions.map((t) => {
+        const existing = existingConditions.find((c) => c.condition === t);
+        if (existing) {
+          return existing;
+        } else {
+          return {
+            condition: t,
+            person: person.id,
+          } satisfies PersonConditionRecord;
+        }
+      });
+    });
+
+  const groupCommon: (PersonConditionRecord | PersonConditionResponse)[] =
+    $derived.by(() => {
+      return commonConditions.map((t) => {
+        const existing = existingConditions.find((c) => c.condition === t);
+        if (existing) {
+          return existing;
+        } else {
+          return {
+            condition: t,
+            person: person.id,
+          } satisfies PersonConditionRecord;
+        }
+      });
+    });
+
+  const groupLessCommon: (PersonConditionRecord | PersonConditionResponse)[] =
+    $derived.by(() => {
+      return lessCommonConditions.map((t) => {
+        const existing = existingConditions.find((c) => c.condition === t);
+        if (existing) {
+          return existing;
+        } else {
+          return {
+            condition: t,
+            person: person.id,
+          } satisfies PersonConditionRecord;
+        }
+      });
+    });
+
+  const groupExtras: (PersonConditionRecord | PersonConditionResponse)[] =
+    $derived.by(() => {
+      const extraConditions: (
+        | PersonConditionRecord
+        | PersonConditionResponse
+      )[] = [];
+
+      // Collect conditions for types that are not in groups
+      let allConditionTypes: PersonConditionConditionOptions[] = Object.values(
+        PersonConditionConditionOptions
+      ).filter(
+        (option) =>
+          option !== PersonConditionConditionOptions.other &&
+          option !== PersonConditionConditionOptions["birth-defect"] &&
+          option !== PersonConditionConditionOptions["stillbirth-miscarriage"]
+      );
+      let ungroupedConditionTypes = allConditionTypes.filter(
+        (t) =>
+          !heartConditions.includes(t) &&
+          !commonConditions.includes(t) &&
+          !lessCommonConditions.includes(t)
+      );
+      const ungroupedConditions = ungroupedConditionTypes.map((t) => {
+        const existing = existingConditions.find((c) => c.condition === t);
+        if (existing) {
+          return existing;
+        } else {
+          return {
+            condition: t,
+            person: person.id,
+          } satisfies PersonConditionRecord;
+        }
+      });
+      extraConditions.push(...ungroupedConditions);
+
+      // Collect conditions that no longer have a type (i.e. we've removed it
+      // from the collection but rows with the value still exist).
+      let removedExistingConditions = existingConditions.filter(
+        (c) =>
+          !allConditionTypes.includes(c.condition) &&
+          c.condition !== PersonConditionConditionOptions.other
+      );
+      extraConditions.push(...removedExistingConditions);
+
+      // Put existing 'other' conditions at the end
+      const otherConditions = existingConditions.filter(
+        (c) => c.condition === PersonConditionConditionOptions.other
+      );
+      extraConditions.push(...otherConditions);
+
+      // Add a new 'other' condition at the very end
+      extraConditions.push({
+        condition: PersonConditionConditionOptions.other,
+        person: person.id,
+      } satisfies PersonConditionRecord);
+
+      return extraConditions;
+    });
 </script>
 
 <h2 class="h2 mt-8">General Details</h2>
@@ -90,6 +219,7 @@
           ...person,
           birthYear: parseInt(e.currentTarget.value, 10),
         })}
+      disabled={$store}
     />
   </label>
   <label class="label">
@@ -103,6 +233,7 @@
           ...person,
           deathYear: parseInt(e.currentTarget.value, 10),
         })}
+      disabled={$store}
     />
   </label>
   <label class="label">
@@ -116,6 +247,7 @@
           ...person,
           deathAge: parseInt(e.currentTarget.value, 10),
         })}
+      disabled={$store}
     />
   </label>
   <label class="label">
@@ -129,6 +261,7 @@
           ...person,
           ethnicity: e.currentTarget.value,
         })}
+      disabled={$store}
     />
   </label>
   {#if error}
@@ -160,8 +293,25 @@
 <h2 class="h2 mt-8">Lifestyle</h2>
 <div class="flex flex-col gap-2">
   {#each lifestyles as lifestyle ("id" in lifestyle ? lifestyle.id : lifestyle.lifestyle)}
-    <NewLifeStyle {lifestyle} />
+    <Lifestyle {lifestyle} />
   {/each}
 </div>
 
 <h2 class="h2 mt-8">Conditions</h2>
+<div class="flex flex-col gap-2">
+  <h3 class="h4 mt-2">Heart, Cardiovascular</h3>
+  {#each groupHeart as condition ("id" in condition ? condition.id : condition.condition)}
+    <Condition {condition} />
+  {/each}
+  <h3 class="h4 mt-4">Common</h3>
+  {#each groupCommon as condition ("id" in condition ? condition.id : condition.condition)}
+    <Condition {condition} />
+  {/each}
+  <h3 class="h4 mt-4">Other</h3>
+  {#each groupLessCommon as condition ("id" in condition ? condition.id : condition.condition)}
+    <Condition {condition} />
+  {/each}
+  {#each groupExtras as condition ("id" in condition ? condition.id : condition.condition)}
+    <Condition {condition} />
+  {/each}
+</div>

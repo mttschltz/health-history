@@ -1,27 +1,25 @@
 <script lang="ts">
   import type {
-    PersonLifestyleRecord,
-    PersonLifestyleResponse,
-    PersonRecord,
-    PersonResponse,
+    PersonConditionRecord,
+    PersonConditionResponse,
   } from "$lib/pocketbase/generated-types";
-  import { PersonLifestyleLifestyleOptions } from "$lib/pocketbase/generated-types";
-  import { authModel, client, save } from "$lib/pocketbase";
+  import { PersonConditionConditionOptions } from "$lib/pocketbase/generated-types";
+  import { client, save } from "$lib/pocketbase";
   import { activityStore } from "$lib/components/Spinner.svelte";
   import { alerts } from "$lib/components/Alerts.svelte";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
 
   let {
-    lifestyle,
+    condition,
   }: {
-    lifestyle: PersonLifestyleResponse | PersonLifestyleRecord;
+    condition: PersonConditionResponse | PersonConditionRecord;
   } = $props();
   let isCreate = $derived.by(() => {
-    return !("id" in lifestyle);
+    return !("id" in condition);
   });
-  let originalDetails = $state(lifestyle.details);
-  let expandDetails = $state(!!lifestyle.details);
-  const hasChanged = $derived.by(() => lifestyle.details !== originalDetails);
+  let originalDetails = $state(condition.details);
+  let expandDetails = $state(!!condition.details);
+  const hasChanged = $derived.by(() => condition.details !== originalDetails);
   let error = $state("");
 
   async function onsubmit(e: SubmitEvent) {
@@ -30,44 +28,64 @@
     // TODO: Remove
     await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
-      lifestyle = await save<PersonLifestyleResponse>(
-        "person_lifestyle",
-        lifestyle
+      condition = await save<PersonConditionResponse>(
+        "person_condition",
+        condition
       );
-      originalDetails = lifestyle.details;
-      expandDetails = !!lifestyle.details;
+      originalDetails = condition.details;
+      expandDetails = !!condition.details;
       if (isCreate) {
-        alerts.info("Lifestyle created.", 5000);
+        alerts.info("Condition created.", 5000);
       } else {
-        alerts.info("Lifestyle updated.", 5000);
+        alerts.info("Condition updated.", 5000);
       }
     } catch {
       if (isCreate) {
-        error = "Error creating lifestyle. Please try again.";
+        error = "Error creating condition. Please try again.";
       } else {
-        error = "Error saving lifestyle. Please try again.";
+        error = "Error saving condition. Please try again.";
       }
     }
   }
 
   const store = activityStore<SubmitEvent>((e) => onsubmit(e));
 
-  function lifestyleTitle(
-    lifestyle: PersonLifestyleResponse | PersonLifestyleRecord
+  function conditionTitle(
+    condition: PersonConditionResponse | PersonConditionRecord
   ) {
-    switch (lifestyle.lifestyle) {
-      case PersonLifestyleLifestyleOptions.smoking:
-        return "Smoker";
-      case PersonLifestyleLifestyleOptions.alcohol:
-        return "Heavy drinker";
-      case PersonLifestyleLifestyleOptions.drugs:
-        return "Drug use";
-      case PersonLifestyleLifestyleOptions.job:
-        return "Unhealthy job";
-      case PersonLifestyleLifestyleOptions.weight:
-        return "Weight concerns";
-      case PersonLifestyleLifestyleOptions.other:
+    switch (condition.condition) {
+      case PersonConditionConditionOptions["diabetes-type-1"]:
+        return "Diabetes Type 1";
+      case PersonConditionConditionOptions["diabetes-type-2"]:
+        return "Diabetes Type 2";
+      case PersonConditionConditionOptions["genetic-disorder"]:
+        return "Genetic Disorder (e.g. haemophilia, Down syndrome, cystic fibrosis)";
+      case PersonConditionConditionOptions["heart-disease"]:
+        return "Heart Disease";
+      case PersonConditionConditionOptions["heart-attack"]:
+        return "Heart Attack";
+      case PersonConditionConditionOptions["high-blood-pressure"]:
+        return "High Blood Pressure";
+      case PersonConditionConditionOptions["high-cholesterol"]:
+        return "High Cholesterol";
+      case PersonConditionConditionOptions["mental-illness"]:
+        return "Mental Health";
+      case PersonConditionConditionOptions["osteoporosis"]:
+        return "Osteoporosis";
+      case PersonConditionConditionOptions["cancer"]:
+        return "Cancer";
+      case PersonConditionConditionOptions["stroke"]:
+        return "Stroke";
+      case PersonConditionConditionOptions["lung"]:
+        return "Lung (e.g. asthma, COPD)";
+      case PersonConditionConditionOptions["neuro"]:
+        return "Neurological (e.g. Alzheimer's, dementia)";
+      case PersonConditionConditionOptions["liver"]:
+        return "Liver";
+      case PersonConditionConditionOptions.other:
         return "Other";
+      default:
+        return condition.condition;
     }
   }
 </script>
@@ -84,13 +102,13 @@
     {/if}
     <div class="flex w-full justify-between">
       <span class="badge preset-filled-primary-500"
-        >{lifestyleTitle(lifestyle)}</span
+        >{conditionTitle(condition)}</span
       >
       {#if client.authStore.isValid}
         <div>
           <div class="flex items-center gap-3">
             {#if !expandDetails}
-              {#if lifestyle.details}
+              {#if condition.details}
                 <button
                   class="btn"
                   type="button"
@@ -133,10 +151,10 @@
         <textarea
           class="textarea rounded-3xl"
           rows="3"
-          value={lifestyle.details}
+          value={condition.details}
           oninput={(e) =>
-            (lifestyle = { ...lifestyle, details: e.currentTarget.value })}
-          placeholder="Details of lifestyle issues"
+            (condition = { ...condition, details: e.currentTarget.value })}
+          placeholder="Details of condition issues"
           disabled={$store}
         ></textarea>
       </label>
