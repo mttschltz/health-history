@@ -59,7 +59,7 @@
       case PersonConditionConditionOptions["diabetes-type-2"]:
         return "Diabetes Type 2";
       case PersonConditionConditionOptions["genetic-disorder"]:
-        return "Genetic Disorder (e.g. haemophilia, Down syndrome, cystic fibrosis)";
+        return "Genetic Disorder";
       case PersonConditionConditionOptions["heart-disease"]:
         return "Heart Disease";
       case PersonConditionConditionOptions["heart-attack"]:
@@ -77,15 +77,27 @@
       case PersonConditionConditionOptions["stroke"]:
         return "Stroke";
       case PersonConditionConditionOptions["lung"]:
-        return "Lung (e.g. asthma, COPD)";
+        return "Lung";
       case PersonConditionConditionOptions["neuro"]:
-        return "Neurological (e.g. Alzheimer's, dementia)";
+        return "Neurological";
       case PersonConditionConditionOptions["liver"]:
         return "Liver";
       case PersonConditionConditionOptions.other:
         return "Other";
       default:
         return condition.condition;
+    }
+  }
+  function conditionHint(
+    condition: PersonConditionResponse | PersonConditionRecord
+  ) {
+    switch (condition.condition) {
+      case PersonConditionConditionOptions["genetic-disorder"]:
+        return "E.g. haemophilia, Down syndrome, cystic fibrosis.";
+      case PersonConditionConditionOptions["lung"]:
+        return "E.g. asthma, COPD";
+      case PersonConditionConditionOptions["neuro"]:
+        return "E.g. Alzheimer's, dementia";
     }
   }
 </script>
@@ -100,49 +112,69 @@
         <span class="card preset-filled-error-100-900 p-2">{error}</span>
       </div>
     {/if}
-    <div class="flex w-full justify-between">
-      <span class="badge preset-filled-primary-500"
-        >{conditionTitle(condition)}</span
-      >
-      {#if client.authStore.isValid}
-        <div>
-          <div class="flex items-center gap-3">
-            {#if !expandDetails}
-              {#if condition.details}
-                <button
-                  class="btn"
-                  type="button"
-                  onclick={() => (expandDetails = true)}>Edit details</button
-                >
-              {:else}
-                <button
-                  class="btn italic"
-                  type="button"
-                  onclick={() => (expandDetails = true)}>Provide Details</button
+    <div class="flex w-full flex-col">
+      <div class="flex w-full items-center justify-between">
+        <span class="badge preset-filled-primary-500"
+          >{conditionTitle(condition)}</span
+        >
+        {#if client.authStore.isValid}
+          <div>
+            <div class="flex items-center gap-3">
+              {#if !expandDetails}
+                {#if condition.details}
+                  <button
+                    class="btn"
+                    type="button"
+                    onclick={() => (expandDetails = true)}>Edit details</button
+                  >
+                {:else}
+                  <button
+                    class="btn italic"
+                    type="button"
+                    onclick={() => (expandDetails = true)}
+                    >Provide Details</button
+                  >
+                {/if}
+              {/if}
+              {#if hasChanged}
+                <span class="badge preset-filled-warning-500 mr-2"
+                  >Unsaved changes</span
                 >
               {/if}
-            {/if}
-            {#if hasChanged}
-              <span class="badge preset-filled-warning-500 mr-2"
-                >Unsaved changes</span
-              >
-            {/if}
-            {#if $store}
-              <button class="btn preset-filled" type="submit" disabled={$store}>
-                <ProgressRing size="size-7" />
-              </button>
-            {:else if isCreate}
-              <button class="btn preset-filled" type="submit" disabled={$store}>
-                Add
-              </button>
-            {:else if hasChanged}
-              <button class="btn preset-filled" type="submit" disabled={$store}>
-                Update
-              </button>
-            {:else}
-              <span class="pr-4 text-2xl">✅</span>
-            {/if}
+              {#if $store}
+                <button
+                  class="btn preset-filled"
+                  type="submit"
+                  disabled={$store}
+                >
+                  <ProgressRing size="size-7" />
+                </button>
+              {:else if isCreate}
+                <button
+                  class="btn preset-filled"
+                  type="submit"
+                  disabled={$store}
+                >
+                  Add
+                </button>
+              {:else if hasChanged}
+                <button
+                  class="btn preset-filled"
+                  type="submit"
+                  disabled={$store}
+                >
+                  Update
+                </button>
+              {:else}
+                <span class="pr-4 text-2xl">✅</span>
+              {/if}
+            </div>
           </div>
+        {/if}
+      </div>
+      {#if conditionHint(condition)}
+        <div class="pl-2 text-sm">
+          {conditionHint(condition)}
         </div>
       {/if}
     </div>

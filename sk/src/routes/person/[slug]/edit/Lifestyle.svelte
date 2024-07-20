@@ -82,7 +82,7 @@
         <span class="card preset-filled-error-100-900 p-2">{error}</span>
       </div>
     {/if}
-    <div class="flex w-full justify-between">
+    <div class="flex w-full items-center justify-between">
       <span class="badge preset-filled-primary-500"
         >{lifestyleTitle(lifestyle)}</span
       >
