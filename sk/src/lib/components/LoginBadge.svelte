@@ -4,9 +4,13 @@
   import Alerts, { alerts } from "./Alerts.svelte";
   import Dialog from "./Dialog.svelte";
   import LoginForm from "./LoginForm.svelte";
+  import { CircleUser } from "lucide-svelte";
+  import { goto } from "$app/navigation";
+
   const { signupAllowed = true } = $props();
   async function logout() {
     client.authStore.clear();
+    goto("/");
   }
   const unsubscribe = client.authStore.onChange((token, model) => {
     if (model) {
@@ -22,73 +26,11 @@
 </script>
 
 {#if $authModel}
-  <Dialog>
-    {#snippet trigger(show)}
-      <button class="badge" onclick={show}>
-        {#if $authModel.avatar}
-          <img
-            src={client.getFileUrl($authModel, $authModel.avatar)}
-            alt="profile pic"
-          />
-        {/if}
-        <samp
-          >{$authModel?.name || $authModel?.username || $authModel?.email}</samp
-        >
-      </button>
-    {/snippet}
-    <div class="wrapper">
-      <div class="badge">
-        {#if $authModel.avatar}
-          <img
-            src={client.getFileUrl($authModel, $authModel.avatar)}
-            alt="profile pic"
-          />
-        {/if}
-        <samp
-          >{$authModel?.name ?? $authModel?.username ?? $authModel?.email}</samp
-        >
-      </div>
-      <button onclick={logout}>Sign Out</button>
-    </div>
-  </Dialog>
-{:else}
-  <Dialog>
-    {#snippet trigger(show)}
-      <button onclick={show}>
-        {signupAllowed ? "Log In / Sign Up" : "Log In"}
-      </button>
-    {/snippet}
-    <Alerts />
-    <LoginForm {signupAllowed} />
-  </Dialog>
+  <div class="flex items-center gap-x-4">
+    <span>{$authModel?.name ?? $authModel?.username ?? $authModel?.email}</span>
+    <button class="btn preset-tonal-primary" onclick={logout}>Sign Out</button>
+  </div>
 {/if}
 
 <style lang="scss">
-  .badge {
-    padding: 0;
-    background-color: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    > img {
-      height: 2em;
-      width: 2em;
-      border-radius: 50%;
-    }
-    > samp {
-      display: inline-block !important;
-      -moz-border-radius: 20px !important;
-      -webkit-border-radius: 20px !important;
-      -khtml-border-radius: 20px !important;
-      border-radius: 20px !important;
-      padding: 0.5rem !important;
-      text-align: center !important;
-      line-height: 1.5rem !important;
-    }
-  }
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-  }
 </style>

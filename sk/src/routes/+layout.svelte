@@ -1,10 +1,12 @@
 <script>
   import "../app.css";
-  import { base } from "$app/paths";
+  import { authModel } from "../lib/pocketbase";
   import { page } from "$app/stores";
   import Alerts from "$lib/components/Alerts.svelte";
   import LoginBadge from "$lib/components/LoginBadge.svelte";
-  import Nav from "$lib/components/Nav.svelte";
+  import { AppBar } from "@skeletonlabs/skeleton-svelte";
+  import ArrowLeft from "lucide-svelte/icons/arrow-left";
+  import LoginForm from "$lib/components/LoginForm.svelte";
 
   const { data, children } = $props();
 
@@ -12,6 +14,8 @@
   const config = $derived(data.config ?? {});
 
   const title = $derived($page.data.title);
+  const back = $derived($page.data.back);
+  const isHome = $derived(!title);
 
   $effect(() => {
     if ($page.error) {
@@ -21,22 +25,44 @@
 </script>
 
 <svelte:head>
-  <title>{metadata.title} | {config.site?.name}</title>
+  <title
+    >{title
+      ? `${metadata.title} ${config.site?.name}`
+      : config.site?.name}</title
+  >
 </svelte:head>
 
-<header class="container">
-  <a href={`${base}/`} class="logo">
-    <img src={`${base}/favicon.svg`} alt="application logo" />
-  </a>
-  <Nav></Nav>
-  <LoginBadge signupallowed={config.signupAllowed}></LoginBadge>
-</header>
-<main class="container">
+<AppBar>
+  {#snippet lead()}
+    <div class="flex flex-col justify-center">
+      {#if isHome}
+        {config.site?.name}
+      {:else}
+        <a href={back ?? "/"}>
+          <ArrowLeft size={24} />
+        </a>
+      {/if}
+    </div>
+  {/snippet}
+  <!-- {#if !title}
+    <h1>{title}</h1>
+  {/if} -->
+  {#snippet trail()}
+    <div class="flex flex-col justify-center">
+      <LoginBadge signupAllowed={config.signupAllowed}></LoginBadge>
+    </div>
+  {/snippet}
+</AppBar>
+<main>
   <Alerts></Alerts>
-  <h1 class="h1">{title ?? metadata.headline ?? metadata.title}</h1>
+  <!-- <h1 class="h1">{title ?? metadata.headline ?? metadata.title}</h1> -->
+
+  {#if !$authModel}
+    <LoginForm signupAllowed={false}></LoginForm>
+  {/if}
   {@render children()}
 </main>
-<footer class="container">
+<footer class="mt-8">
   Copyright © {config.site?.year}
   {config.site?.copyright}
 </footer>

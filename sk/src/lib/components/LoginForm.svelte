@@ -35,17 +35,25 @@
 </script>
 
 {#snippet signin()}
-  <input bind:value={form.email} required type="text" placeholder="email" />
-  <input
-    bind:value={form.password}
-    required
-    type="password"
-    placeholder="password"
-  />
-  <label title="sign-in as admin">
+  <div class="flex flex-col gap-2">
+    <input bind:value={form.email} required type="text" placeholder="email" />
+    <input
+      bind:value={form.password}
+      required
+      type="password"
+      placeholder="password"
+    />
+    <!-- <label title="sign-in as admin">
     <input type="checkbox" bind:checked={form.admin} />Admin
-  </label>
-  <button type="submit" onclick={() => (signup = false)}>Log In</button>
+    </label> -->
+    <div class="self-end">
+      <button
+        class="btn preset-filled-primary-500"
+        type="submit"
+        onclick={() => (signup = false)}>Log In</button
+      >
+    </div>
+  </div>
 {/snippet}
 
 <form onsubmit={submit}>
@@ -89,7 +97,7 @@
         </TabContent>
       </TabGroup>
     {:else}
-      <h2>Log In</h2>
+      <h2 class="h2">Log In</h2>
       {@render signin()}
     {/if}
   {/if}
