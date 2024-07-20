@@ -53,7 +53,7 @@
     </div>
   {/snippet}
 </AppBar>
-<main>
+<main class="p-4">
   <Alerts></Alerts>
   <!-- <h1 class="h1">{title ?? metadata.headline ?? metadata.title}</h1> -->
 
@@ -62,7 +62,7 @@
   {/if}
   {@render children()}
 </main>
-<footer class="mt-8">
+<footer class="mt-8 p-4">
   Copyright © {config.site?.year}
   {config.site?.copyright}
 </footer>
