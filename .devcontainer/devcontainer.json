@@ -15,7 +15,8 @@
 				"esbenp.prettier-vscode",
 				"svelte.svelte-vscode",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"
+				"GitHub.copilot-chat",
+				"eamodio.gitlens"
 			]
 		}
 	}
