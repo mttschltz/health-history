@@ -7,6 +7,7 @@
   import { AppBar } from "@skeletonlabs/skeleton-svelte";
   import ArrowLeft from "lucide-svelte/icons/arrow-left";
   import LoginForm from "$lib/components/LoginForm.svelte";
+  import { HomeIcon } from "lucide-svelte";
 
   const { data, children } = $props();
 
@@ -37,9 +38,13 @@
     <div class="flex flex-col justify-center">
       {#if isHome}
         {config.site?.name}
-      {:else}
+      {:else if !!back && back !== "/"}
         <a href={back ?? "/"}>
           <ArrowLeft size={24} />
+        </a>
+      {:else}
+        <a href={"/"} class="flex gap-2">
+          <HomeIcon size={24} /><span>Home</span>
         </a>
       {/if}
     </div>
