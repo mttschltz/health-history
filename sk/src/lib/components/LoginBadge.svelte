@@ -1,16 +1,15 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
   import { authModel, client } from "../pocketbase";
-  import Alerts, { alerts } from "./Alerts.svelte";
-  import Dialog from "./Dialog.svelte";
-  import LoginForm from "./LoginForm.svelte";
-  import { CircleUser } from "lucide-svelte";
+  import { alerts } from "./Alerts.svelte";
   import { goto } from "$app/navigation";
 
   const { signupAllowed = true } = $props();
   async function logout() {
     client.authStore.clear();
-    goto("/");
+    goto("/", {
+      invalidateAll: true,
+    });
   }
   const unsubscribe = client.authStore.onChange((token, model) => {
     if (model) {

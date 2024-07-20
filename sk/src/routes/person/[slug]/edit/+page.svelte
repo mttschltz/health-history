@@ -1,7 +1,7 @@
 <script lang="ts">
   import { alerts } from "$lib/components/Alerts.svelte";
   import { activityStore } from "$lib/components/Spinner.svelte";
-  import { client, save } from "$lib/pocketbase";
+  import { client, save, authModel } from "$lib/pocketbase";
   import {
     type PersonResponse,
     type PersonLifestyleResponse,
@@ -15,6 +15,8 @@
   import deepEq from "fast-deep-equal";
   import Lifestyle from "./Lifestyle.svelte";
   import Condition from "./Condition.svelte";
+
+  const writeAccess = $derived(!!$authModel?.writeAccess);
 
   const { data } = $props();
 
@@ -219,7 +221,7 @@
           ...person,
           birthYear: parseInt(e.currentTarget.value, 10),
         })}
-      disabled={$store}
+      disabled={!writeAccess || $store}
     />
   </label>
   <label class="label">
@@ -233,7 +235,7 @@
           ...person,
           deathYear: parseInt(e.currentTarget.value, 10),
         })}
-      disabled={$store}
+      disabled={!writeAccess || $store}
     />
   </label>
   <label class="label">
@@ -247,7 +249,7 @@
           ...person,
           deathAge: parseInt(e.currentTarget.value, 10),
         })}
-      disabled={$store}
+      disabled={!writeAccess || $store}
     />
   </label>
   <label class="label">
@@ -261,7 +263,7 @@
           ...person,
           ethnicity: e.currentTarget.value,
         })}
-      disabled={$store}
+      disabled={!writeAccess || $store}
     />
   </label>
   {#if error}
@@ -293,7 +295,7 @@
 <h2 class="h2 mt-8">Lifestyle</h2>
 <div class="flex flex-col gap-2">
   {#each lifestyles as lifestyle ("id" in lifestyle ? lifestyle.id : lifestyle.lifestyle)}
-    <Lifestyle {lifestyle} />
+    <Lifestyle {lifestyle} {writeAccess} />
   {/each}
 </div>
 
@@ -301,17 +303,17 @@
 <div class="flex flex-col gap-2">
   <h3 class="h4 mt-2">Heart, Cardiovascular</h3>
   {#each groupHeart as condition ("id" in condition ? condition.id : condition.condition)}
-    <Condition {condition} />
+    <Condition {condition} {writeAccess} />
   {/each}
   <h3 class="h4 mt-4">Common</h3>
   {#each groupCommon as condition ("id" in condition ? condition.id : condition.condition)}
-    <Condition {condition} />
+    <Condition {condition} {writeAccess} />
   {/each}
   <h3 class="h4 mt-4">Other</h3>
   {#each groupLessCommon as condition ("id" in condition ? condition.id : condition.condition)}
-    <Condition {condition} />
+    <Condition {condition} {writeAccess} />
   {/each}
   {#each groupExtras as condition ("id" in condition ? condition.id : condition.condition)}
-    <Condition {condition} />
+    <Condition {condition} {writeAccess} />
   {/each}
 </div>

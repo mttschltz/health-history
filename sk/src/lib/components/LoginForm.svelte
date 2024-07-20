@@ -8,7 +8,6 @@
   import TabGroup from "./TabGroup.svelte";
   import Tab from "./Tab.svelte";
   import TabContent from "./TabContent.svelte";
-  const coll = client.collection(authCollection);
 
   const form = $state({
     email: "",
@@ -22,13 +21,20 @@
   async function submit(e: SubmitEvent) {
     e.preventDefault();
     if (signup) {
-      await coll.create({ ...form });
+      await client.collection("users").create({ ...form });
     }
     // signin
     if (form.admin) {
       await client.admins.authWithPassword(form.email, form.password);
     } else {
-      await coll.authWithPassword(form.email, form.password);
+      await client
+        .collection("users")
+        .authWithPassword(form.email, form.password);
+
+      // Calling goto() with invalidateAll doesn't work. It seems page.svelte
+      // isn't run again after page.ts->load() is called.
+      window.location.reload();
+      // goto("/", { invalidateAll: true });
     }
   }
   let active = $state("SignIn");
@@ -101,9 +107,13 @@
       {@render signin()}
     {/if}
   {/if}
-  {#await coll.listAuthMethods({ $autoCancel: false }) then methods}
+  {#await client
+    .collection("users")
+    .listAuthMethods({ $autoCancel: false }) then methods}
     {#each methods.authProviders as p}
-      <button type="button" onclick={() => providerLogin(p, coll)}
+      <button
+        type="button"
+        onclick={() => providerLogin(p, client.collection("users"))}
         >Sign-in with {p.name}</button
       >
     {/each}

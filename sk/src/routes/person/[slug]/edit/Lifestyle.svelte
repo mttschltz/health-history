@@ -13,8 +13,10 @@
 
   let {
     lifestyle,
+    writeAccess,
   }: {
     lifestyle: PersonLifestyleResponse | PersonLifestyleRecord;
+    writeAccess: boolean;
   } = $props();
   let isCreate = $derived.by(() => {
     return !("id" in lifestyle);
@@ -94,12 +96,14 @@
                 <button
                   class="btn"
                   type="button"
+                  disabled={!writeAccess}
                   onclick={() => (expandDetails = true)}>Edit details</button
                 >
               {:else}
                 <button
                   class="btn italic"
                   type="button"
+                  disabled={!writeAccess}
                   onclick={() => (expandDetails = true)}>Provide Details</button
                 >
               {/if}
@@ -114,7 +118,11 @@
                 <ProgressRing size="size-7" />
               </button>
             {:else if isCreate}
-              <button class="btn preset-filled" type="submit" disabled={$store}>
+              <button
+                class="btn preset-filled"
+                type="submit"
+                disabled={!writeAccess || $store}
+              >
                 Add
               </button>
             {:else if hasChanged}
@@ -137,7 +145,7 @@
           oninput={(e) =>
             (lifestyle = { ...lifestyle, details: e.currentTarget.value })}
           placeholder="Details of lifestyle issues"
-          disabled={$store}
+          disabled={!writeAccess || $store}
         ></textarea>
       </label>
     {/if}

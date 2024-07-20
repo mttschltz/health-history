@@ -11,8 +11,10 @@
 
   let {
     condition,
+    writeAccess,
   }: {
     condition: PersonConditionResponse | PersonConditionRecord;
+    writeAccess: boolean;
   } = $props();
   let isCreate = $derived.by(() => {
     return !("id" in condition);
@@ -125,14 +127,15 @@
                   <button
                     class="btn"
                     type="button"
-                    onclick={() => (expandDetails = true)}>Edit details</button
+                    onclick={() => (expandDetails = true)}
+                    disabled={!writeAccess}>Edit details</button
                   >
                 {:else}
                   <button
                     class="btn italic"
                     type="button"
                     onclick={() => (expandDetails = true)}
-                    >Provide Details</button
+                    disabled={!writeAccess}>Provide Details</button
                   >
                 {/if}
               {/if}
@@ -153,7 +156,7 @@
                 <button
                   class="btn preset-filled"
                   type="submit"
-                  disabled={$store}
+                  disabled={!writeAccess || $store}
                 >
                   Add
                 </button>
@@ -187,7 +190,7 @@
           oninput={(e) =>
             (condition = { ...condition, details: e.currentTarget.value })}
           placeholder="Details of condition issues"
-          disabled={$store}
+          disabled={!writeAccess || $store}
         ></textarea>
       </label>
     {/if}

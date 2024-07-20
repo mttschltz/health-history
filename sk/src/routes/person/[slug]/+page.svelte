@@ -1,6 +1,6 @@
 <script lang="ts">
   import ImgModal from "$lib/pocketbase/ImgModal.svelte";
-  import { client } from "$lib/pocketbase/index.js";
+  import { authModel, client } from "$lib/pocketbase/index.js";
   import { base } from "$app/paths";
   import { PersonSexOptions } from "$lib/pocketbase/generated-types";
 
@@ -17,7 +17,11 @@
 
 <article>
   <a href={`${base}/person/${person.id}/edit`} class="btn preset-filled">
-    Update health history
+    {#if $authModel?.writeAccess}
+      Update health history
+    {:else}
+      View health history
+    {/if}
   </a>
 
   <h2 class="h2">Parents</h2>

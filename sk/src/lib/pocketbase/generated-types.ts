@@ -118,6 +118,7 @@ export type PostsRecord = {
 export type UsersRecord = {
 	avatar?: string
 	name?: string
+	writeAccess: boolean
 }
 
 // Response types include system fields and match responses from the PocketBase API
