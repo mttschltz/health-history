@@ -1,5 +1,6 @@
 <script lang="ts">
   import { base } from "$app/paths";
+  import { LucideDivideCircle } from "lucide-svelte";
   import { derived } from "svelte/store";
 
   const { data } = $props();
@@ -9,12 +10,12 @@
 </script>
 
 <h2 class="h2">Everyone</h2>
-<ul>
+<div class="mt-4 flex flex-col gap-2">
   {#each $people as person}
-    <li>
-      <a class="anchor" href={`${base}/person/${person.id}`}
+    <div>
+      <a class="btn preset-tonal" href={`${base}/person/${person.id}`}
         >{person.fullName}</a
       >
-    </li>
+    </div>
   {/each}
-</ul>
+</div>
