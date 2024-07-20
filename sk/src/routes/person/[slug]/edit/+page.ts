@@ -11,5 +11,6 @@ export const load: PageLoad = async ({ parent, fetch }) => {
 
   return {
     back: `${base}/person/${person.id}`,
+    title: `${person.fullName}'s Health History`,
   };
 };

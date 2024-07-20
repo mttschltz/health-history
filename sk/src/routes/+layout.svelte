@@ -53,7 +53,7 @@
     </div>
   {/snippet}
 </AppBar>
-<main class="p-4">
+<main class="m-4 max-w-lg">
   <Alerts></Alerts>
   <!-- <h1 class="h1">{title ?? metadata.headline ?? metadata.title}</h1> -->
 

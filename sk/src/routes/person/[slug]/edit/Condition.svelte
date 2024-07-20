@@ -105,7 +105,7 @@
 </script>
 
 <form
-  class={`card ${isCreate ? "preset-outlined-secondary-100-900" : "preset-filled-secondary-100-900"} border-secondary-200-800 block max-w-md overflow-hidden border p-2`}
+  class={`card ${isCreate ? "preset-outlined-secondary-100-900" : "preset-filled-secondary-100-900"} border-secondary-200-800 block overflow-hidden border p-2`}
   onsubmit={store.run}
 >
   <div class="flex flex-col items-start gap-3">

@@ -208,7 +208,8 @@
     });
 </script>
 
-<h2 class="h2 mt-8">General Details</h2>
+<h1 class="h1">{data.title}</h1>
+<h2 class="h3 mt-8">General Details</h2>
 <form onsubmit={store.run} class="flex flex-col space-y-4">
   <label class="label">
     <span>Year of Birth</span>
@@ -292,14 +293,14 @@
   {/if}
 </form>
 
-<h2 class="h2 mt-8">Lifestyle</h2>
+<h2 class="h3 mt-8">Lifestyle</h2>
 <div class="flex flex-col gap-2">
   {#each lifestyles as lifestyle ("id" in lifestyle ? lifestyle.id : lifestyle.lifestyle)}
     <Lifestyle {lifestyle} {writeAccess} />
   {/each}
 </div>
 
-<h2 class="h2 mt-8">Conditions</h2>
+<h2 class="h3 mt-8">Conditions</h2>
 <div class="flex flex-col gap-2">
   <h3 class="h4 mt-2">Heart, Cardiovascular</h3>
   {#each groupHeart as condition ("id" in condition ? condition.id : condition.condition)}
