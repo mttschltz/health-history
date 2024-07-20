@@ -1,6 +1,6 @@
 <script lang="ts">
   import ImgModal from "$lib/pocketbase/ImgModal.svelte";
-  import { authModel, client } from "$lib/pocketbase/index.js";
+  import { authModel } from "$lib/pocketbase/index.js";
   import { base } from "$app/paths";
   import { PersonSexOptions } from "$lib/pocketbase/generated-types";
 

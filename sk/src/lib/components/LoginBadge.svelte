@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
   import { authModel, client } from "../pocketbase";
-  import { alerts } from "./Alerts.svelte";
   import { goto } from "$app/navigation";
+  import { alertSuccess } from "$lib/components/alert";
 
   const { signupAllowed = true } = $props();
   async function logout() {
@@ -14,9 +14,9 @@
   const unsubscribe = client.authStore.onChange((token, model) => {
     if (model) {
       const { name, username } = model;
-      alerts.success(`Signed in as ${name || username || "Admin"}`, 5000);
+      alertSuccess(`Signed in as ${name || username || "Admin"}`);
     } else {
-      alerts.success(`Signed out`, 5000);
+      alertSuccess(`Signed out`);
     }
   }, false);
   onDestroy(() => {

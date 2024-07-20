@@ -8,6 +8,7 @@
   import ArrowLeft from "lucide-svelte/icons/arrow-left";
   import LoginForm from "$lib/components/LoginForm.svelte";
   import { HomeIcon } from "lucide-svelte";
+  import { SvelteToast } from "@zerodevx/svelte-toast";
 
   const { data, children } = $props();
 
@@ -49,9 +50,6 @@
       {/if}
     </div>
   {/snippet}
-  <!-- {#if !title}
-    <h1>{title}</h1>
-  {/if} -->
   {#snippet trail()}
     <div class="flex flex-col justify-center">
       <LoginBadge signupAllowed={config.signupAllowed}></LoginBadge>
@@ -59,9 +57,6 @@
   {/snippet}
 </AppBar>
 <main class="m-4 max-w-lg">
-  <Alerts></Alerts>
-  <!-- <h1 class="h1">{title ?? metadata.headline ?? metadata.title}</h1> -->
-
   {#if $authModel}
     {@render children()}
   {:else}
@@ -73,17 +68,11 @@
   {config.site?.copyright}
 </footer>
 
+<SvelteToast
+  options={{
+    duration: 5000,
+  }}
+/>
+
 <style>
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .logo {
-      width: 2rem;
-      height: 2rem;
-    }
-  }
-  main {
-    flex-grow: 1;
-  }
 </style>

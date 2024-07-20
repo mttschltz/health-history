@@ -1,4 +1,4 @@
-import { alerts } from "$lib/components/Alerts.svelte";
+import { alertError } from "$lib/components/alert";
 
 // wrapper to execute a pocketbase client request and generate alerts on failure
 export async function alertOnFailure(request: () => void) {
@@ -9,10 +9,10 @@ export async function alertOnFailure(request: () => void) {
       message,
       data: { data = {} },
     } = e;
-    if (message) alerts.error(message);
+    if (message) alertError(message);
     for (const key in data) {
       const { message } = data[key];
-      if (message) alerts.error(`${key}: ${message}`);
+      if (message) alertError(`${key}: ${message}`);
     }
   }
 }

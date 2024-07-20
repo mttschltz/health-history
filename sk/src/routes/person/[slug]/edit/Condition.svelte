@@ -6,8 +6,8 @@
   import { PersonConditionConditionOptions } from "$lib/pocketbase/generated-types";
   import { client, save } from "$lib/pocketbase";
   import { activityStore } from "$lib/components/Spinner.svelte";
-  import { alerts } from "$lib/components/Alerts.svelte";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
+  import { alertSuccess } from "$lib/components/alert";
 
   let {
     condition,
@@ -37,9 +37,9 @@
       originalDetails = condition.details;
       expandDetails = !!condition.details;
       if (isCreate) {
-        alerts.info("Condition created.", 5000);
+        alertSuccess("Condition created.");
       } else {
-        alerts.info("Condition updated.", 5000);
+        alertSuccess("Condition updated.");
       }
     } catch {
       if (isCreate) {

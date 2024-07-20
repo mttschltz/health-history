@@ -15,6 +15,7 @@
   import deepEq from "fast-deep-equal";
   import Lifestyle from "./Lifestyle.svelte";
   import Condition from "./Condition.svelte";
+  import { alertSuccess } from "$lib/components/alert";
 
   const writeAccess = $derived(!!$authModel?.writeAccess);
 
@@ -38,7 +39,7 @@
         ...person,
       });
       originalPerson = person;
-      alerts.info("Details saved.", 5000);
+      alertSuccess("Details saved.");
     } catch {
       error = "Error saving details. Please try again.";
     }

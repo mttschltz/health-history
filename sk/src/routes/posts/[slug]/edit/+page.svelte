@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { alerts } from "$lib/components/Alerts.svelte";
+  import { alertError, alertSuccess } from "$lib/components/alert.js";
   import FileInput from "$lib/components/FileInput.svelte";
   import Spinner, { activityStore } from "$lib/components/Spinner.svelte";
   import { authModel, client, save } from "$lib/pocketbase";
@@ -39,11 +39,11 @@
         user,
         "files-": toBeRemoved,
       });
-      alerts.info("Post saved.", 5000);
+      alertSuccess("Post saved.");
       history.back();
     } else {
       Object.entries(error.flatten().fieldErrors).forEach(([k, v]) =>
-        alerts.error(`${k}: ${v}`)
+        alertError(`${k}: ${v}`)
       );
     }
   }
@@ -52,7 +52,7 @@
 
 <form onsubmit={store.run}>
   <output>ID: {record.id ?? "-"}</output>
-  <div class="flex h">
+  <div class="h flex">
     <div data-label="title">
       <input type="text" bind:value={record.title} />
     </div>

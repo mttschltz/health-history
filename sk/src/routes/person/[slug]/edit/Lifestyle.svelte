@@ -2,14 +2,12 @@
   import type {
     PersonLifestyleRecord,
     PersonLifestyleResponse,
-    PersonRecord,
-    PersonResponse,
   } from "$lib/pocketbase/generated-types";
   import { PersonLifestyleLifestyleOptions } from "$lib/pocketbase/generated-types";
-  import { authModel, client, save } from "$lib/pocketbase";
+  import { client, save } from "$lib/pocketbase";
   import { activityStore } from "$lib/components/Spinner.svelte";
-  import { alerts } from "$lib/components/Alerts.svelte";
   import { ProgressRing } from "@skeletonlabs/skeleton-svelte";
+  import { alertSuccess } from "$lib/components/alert";
 
   let {
     lifestyle,
@@ -39,9 +37,9 @@
       originalDetails = lifestyle.details;
       expandDetails = !!lifestyle.details;
       if (isCreate) {
-        alerts.info("Lifestyle created.", 5000);
+        alertSuccess("Lifestyle created.");
       } else {
-        alerts.info("Lifestyle updated.", 5000);
+        alertSuccess("Lifestyle updated.");
       }
     } catch {
       if (isCreate) {
